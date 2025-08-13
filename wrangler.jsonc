@@ -1,0 +1,27 @@
+{
+  // your project name – used for the workers.dev subdomain
+  "name": "bakedbyerin",
+
+  // your target runtime date – stick to YYYY-MM-DD or YYYY-MM-DD+UTC
+  "compatibility_date": "2025-08-13",
+
+  // publish to your workers.dev preview URL
+  "workers_dev": true,
+
+  // (optional) your Cloudflare Account ID, needed if you push via CLI
+  "account_id": "YOUR_ACCOUNT_ID",
+
+  // tell Wrangler where to find your static site output
+  "assets": {
+    "directory": "./public"
+  },
+
+  // (optional) auto-route to your custom zone
+  "route": {
+    "pattern": "bakedbyerin.com/*",
+    "zone_name": "bakedbyerin.com"
+  },
+
+  // (optional) your Zone ID for the above route
+  "zone_id": "YOUR_ZONE_ID"
+}
