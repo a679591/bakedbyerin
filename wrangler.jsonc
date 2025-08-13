@@ -13,7 +13,7 @@
 
   // tell Wrangler where to find your static site output
   "assets": {
-    "directory": "./main"
+    "directory": "/main"
   },
 
   // (optional) auto-route to your custom zone
