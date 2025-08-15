@@ -5,20 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Baked by Erin</title>
   <style>
-  /* Import a modern, elegant font */
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
   body {
     font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #fafafa;
-    color: #333;
+    background-color: #f5f3f7;
+    color: #2c3e50;
     line-height: 1.6;
   }
 
   header {
-    background: linear-gradient(135deg, #ff9966, #ff5e62);
+    background-color: #7f5fcf;
     color: white;
     padding: 1.5rem 0;
     text-align: center;
@@ -29,7 +28,6 @@
     margin: 0;
     font-size: 2.2rem;
     font-weight: 600;
-    letter-spacing: 1px;
   }
 
   nav ul {
@@ -38,12 +36,13 @@
     padding: 0.5rem 0;
     display: flex;
     justify-content: center;
-    background-color: #222;
+    background-color: #2c3e50;
+    gap: 2rem;
     flex-wrap: wrap;
   }
 
   nav li {
-    margin: 0.5rem 1rem;
+    margin: 0;
   }
 
   nav a {
@@ -54,7 +53,7 @@
   }
 
   nav a:hover {
-    color: #ff9966;
+    color: #7f5fcf;
   }
 
   section {
@@ -65,9 +64,9 @@
 
   section h2 {
     font-size: 1.8rem;
-    color: #ff5e62;
+    color: #008080;
     margin-bottom: 1rem;
-    border-bottom: 2px solid #ffe0d6;
+    border-bottom: 2px solid #d0e7e7;
     padding-bottom: 0.3rem;
   }
 
@@ -79,31 +78,73 @@
     margin-bottom: 0.5rem;
   }
 
+  #pictures {
+    display: flex;
+    overflow-x: auto;
+    gap: 1rem;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 1rem;
+  }
+
   #pictures img {
-    max-width: 100%;
+    width: 150px;
     height: auto;
-    margin-bottom: 1.5rem;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    cursor: pointer;
+    scroll-snap-align: start;
     transition: transform 0.3s ease;
   }
 
   #pictures img:hover {
-    transform: scale(1.03);
+    transform: scale(1.05);
   }
 
   footer {
-    background-color: #222;
+    background-color: #2c3e50;
     color: #ccc;
     text-align: center;
     padding: 1rem 0;
     font-size: 0.9rem;
-    margin-top: 2rem;
   }
 
   footer a {
-    color: #ff9966;
+    color: #7f5fcf;
     text-decoration: none;
+  }
+
+  /* Modal for image expansion */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.8);
+  }
+
+  .modal-content {
+    margin: 5% auto;
+    display: block;
+    max-width: 90%;
+    border-radius: 8px;
+  }
+
+  .modal-content:hover {
+    transform: none;
+  }
+
+  .close {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
   }
 </style>
 </head>
@@ -123,19 +164,23 @@
 
   <section id="about">
     <h2>About Me</h2>
-    <p>Hi, I’m Erin—a home baker obsessed with creating mouthwatering treats for every occasion. Whether you’re craving classic cookies or artisanal breads, I pour my heart into every batch.</p>
+    <p>Hi, I’m Erin—a home baker obsessed with creating mouthwatering treats for every occasion. Whether you’re craving classic cookies or artisanal cakes, I pour my heart into every batch.</p>
   </section>
 
   <section id="menu">
-    <h2>Menu</h2>
-    <ul>
-      <li>Chocolate Chip Cookies</li>
-      <li>Blueberry Muffins</li>
-      <li>Red Velvet Cupcakes</li>
-      <li>Sourdough Bread</li>
-      <li>Seasonal Pies & Tarts</li>
-    </ul>
-  </section>
+  <h2>Menu</h2>
+  <ul>
+    <li>Carrot Cake 8"</li>
+    <li>Chocolate Cake 8"</li>
+    <li>Banana Bread Loaf</li>
+    <li>Banana Espresso Muffins</li>
+    <li>Double Chocolate Banana Bread</li>
+    <li>Zucchini Bread</li>
+    <li>Peanut Butter Granola</li>
+    <li>Please reach out for prices</li>
+    <li>$10 Delivery Fee</li>
+  </ul>
+</section>
 
   <section id="pictures">
     <h2>Pictures</h2>
@@ -154,6 +199,20 @@
   <footer>
     <p>&copy; 2025 Baked by Erin. All rights reserved.</p>
   </footer>
+  <div id="imgModal" class="modal">
+  <span class="close" onclick="document.getElementById('imgModal').style.display='none'">&times;</span>
+  <img class="modal-content" id="modalImg">
+</div>
 
+<script>
+  const modal = document.getElementById("imgModal");
+  const modalImg = document.getElementById("modalImg");
+  document.querySelectorAll("#pictures img").forEach(img => {
+    img.onclick = () => {
+      modal.style.display = "block";
+      modalImg.src = img.src;
+    };
+  });
+</script>
 </body>
 </html>
