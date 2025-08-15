@@ -1,8 +1,0 @@
-{
-  "name": "bakedbyerin-index",
-  "compatibility_date": "2025-08-12",
-  "assets": {
-    "directory": "./",
-    "not_found_handling": "single-page-application"
-  }
-}
