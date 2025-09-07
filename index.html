@@ -1,217 +1,469 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Baked by Erin</title>
-  <style>
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
-  body {
-    font-family: 'Poppins', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f5f3f7;
-    color: #2c3e50;
-    line-height: 1.6;
-  }
-
-  header {
-    background-color: #7f5fcf;
-    color: white;
-    padding: 1.5rem 0;
-    text-align: center;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  }
-
-  header h1 {
-    margin: 0;
-    font-size: 2.2rem;
-    font-weight: 600;
-  }
-
-  nav ul {
-    list-style: none;
-    margin: 0;
-    padding: 0.5rem 0;
-    display: flex;
-    justify-content: center;
-    background-color: #2c3e50;
-    gap: 2rem;
-    flex-wrap: wrap;
-  }
-
-  nav li {
-    margin: 0;
-  }
-
-  nav a {
-    color: white;
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s ease;
-  }
-
-  nav a:hover {
-    color: #7f5fcf;
-  }
-
-  section {
-    padding: 2.5rem 1rem;
-    max-width: 900px;
-    margin: 0 auto;
-  }
-
-  section h2 {
-    font-size: 1.8rem;
-    color: #008080;
-    margin-bottom: 1rem;
-    border-bottom: 2px solid #d0e7e7;
-    padding-bottom: 0.3rem;
-  }
-
-  #menu ul {
-    padding-left: 1.2rem;
-  }
-
-  #menu li {
-    margin-bottom: 0.5rem;
-  }
-
-  #pictures {
-    display: flex;
-    overflow-x: auto;
-    gap: 1rem;
-    scroll-snap-type: x mandatory;
-    padding-bottom: 1rem;
-  }
-
-  #pictures img {
-    width: 150px;
-    height: auto;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    cursor: pointer;
-    scroll-snap-align: start;
-    transition: transform 0.3s ease;
-  }
-
-  #pictures img:hover {
-    transform: scale(1.05);
-  }
-
-  footer {
-    background-color: #2c3e50;
-    color: #ccc;
-    text-align: center;
-    padding: 1rem 0;
-    font-size: 0.9rem;
-  }
-
-  footer a {
-    color: #7f5fcf;
-    text-decoration: none;
-  }
-
-  /* Modal for image expansion */
-  .modal {
-    display: none;
-    position: fixed;
-    z-index: 999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.8);
-  }
-
-  .modal-content {
-    margin: 5% auto;
-    display: block;
-    max-width: 90%;
-    border-radius: 8px;
-  }
-
-  .modal-content:hover {
-    transform: none;
-  }
-
-  .close {
-    position: absolute;
-    top: 20px;
-    right: 35px;
-    color: white;
-    font-size: 40px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baked by Erin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <!-- 
+        Allie's Banana Bread Inspired Design
+        - Clean whites and subtle contrasts
+        - Bold typography with uppercase treatments
+        - Warm accent colors
+        - Product-focused layout
+    -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #2d2d2d;
+        }
+        
+        .hero-text {
+            font-size: 4.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+        
+        .product-card {
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .section-heading {
+            font-size: 2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #8b4513;
+        }
+        
+        .btn-primary {
+            background-color: #d4734a;
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: #c55a35;
+            transform: translateY(-1px);
+        }
+        
+        .minimal-nav {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .price-text {
+            color: #6b7280;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-text {
+                font-size: 3rem;
+            }
+        }
+    </style>
 </head>
-<body>
+<body class="antialiased">
 
-  <header>
-    <h1>Baked by Erin</h1>
-    <nav>
-      <ul>
-        <li><a href="#about">About Me</a></li>
-        <li><a href="#menu">Menu</a></li>
-        <li><a href="#pictures">Pictures</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-    </nav>
-  </header>
+    <!-- Header -->
+    <header class="minimal-nav sticky top-0 z-50">
+        <nav class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <a href="#" class="text-2xl font-bold text-[#8b4513]">🧁 BAKED BY ERIN</a>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex space-x-8 text-sm font-medium uppercase tracking-wide">
+                    <a href="#about" class="hover:text-[#d4734a] transition-colors">About</a>
+                    <a href="#menu" class="hover:text-[#d4734a] transition-colors">Menu</a>
+                    <a href="#pictures" class="hover:text-[#d4734a] transition-colors">Gallery</a>
+                    <a href="#contact" class="hover:text-[#d4734a] transition-colors">Contact</a>
+                </div>
+                
+                <!-- CTA Button -->
+                <a href="#contact" class="btn-primary px-6 py-2 rounded text-sm">
+                    Order Now
+                </a>
+            </div>
+        </nav>
+    </header>
 
-  <section id="about">
-    <h2>About Me</h2>
-    <p>Hi, I’m Erin—a home baker obsessed with creating mouthwatering treats for every occasion. Whether you’re craving classic cookies or artisanal cakes, I pour my heart into every batch.</p>
-  </section>
+    <main>
+        <!-- Hero Section -->
+        <section class="text-center py-16 md:py-24 px-4">
+            <div class="container mx-auto max-w-4xl">
+                <h1 class="hero-text text-[#8b4513] mb-6">
+                    FRESHLY BAKED DAILY
+                </h1>
+                <p class="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                    Handcrafted treats made with love for every occasion
+                </p>
+                <a href="#menu" class="btn-primary px-8 py-3 rounded text-lg inline-block">
+                    View Menu
+                </a>
+            </div>
+        </section>
 
-  <section id="menu">
-  <h2>Menu</h2>
-  <ul>
-    <li>Carrot Cake 8"</li>
-    <li>Chocolate Cake 8"</li>
-    <li>Espresso Banana Bread</li>
-    <li>Double Chocolate Banana Bread</li>
-    <li>Carrot Zucchini Walnut Bread</li>
-    <li>Chunky Peanut Butter Granola</li>
-    <li>Please reach out for prices</li>
-    <li>$10 Delivery Fee</li>
-  </ul>
-</section>
+        <!-- About Section -->
+        <section id="about" class="py-16 px-4 bg-gray-50">
+            <div class="container mx-auto max-w-4xl text-center">
+                <h2 class="section-heading mb-8">About Erin</h2>
+                <div class="max-w-2xl mx-auto">
+                    <div class="w-32 h-32 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-5xl">👩‍🍳</span>
+                    </div>
+                    <p class="text-lg text-gray-600 leading-relaxed">
+                        Hi, I'm Erin—a home baker obsessed with creating mouthwatering treats for every occasion. 
+                        Whether you're craving classic cookies or artisanal breads, I pour my heart into every batch. 
+                        Each recipe is crafted with premium ingredients and years of passion for the perfect bite.
+                    </p>
+                </div>
+            </div>
+        </section>
 
-  <section id="pictures">
-    <h2>Pictures</h2>
-    <img src="images/cookies.jpg" alt="Chocolate Chip Cookies">
-    <img src="images/muffin.jpg" alt="Blueberry Muffins">
-    <img src="images/cake_slice.jpg" alt="Chocolate Cake">
-  </section>
+        <!-- Menu Section (Product Grid Style) -->
+        <section id="menu" class="py-16 px-4">
+            <div class="container mx-auto">
+                <h2 class="section-heading text-center mb-12">Our Menu</h2>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                    <!-- Chocolate Chip Cookies -->
+                    <div class="product-card rounded-lg p-6 text-center">
+                        <div class="text-6xl mb-4">🍪</div>
+                        <h3 class="text-xl font-bold mb-3 text-[#8b4513]">Chocolate Chip Cookies</h3>
+                        <div class="border-b border-gray-200 pb-3 mb-3">
+                            <p class="text-gray-600 text-sm">
+                                Classic comfort cookies loaded with premium chocolate chips
+                            </p>
+                        </div>
+                        <p class="price-text">Available Daily</p>
+                        <div class="mt-4 p-3 bg-gray-50 rounded text-left text-sm">
+                            <strong>• Fresh baked daily</strong><br>
+                            <strong>• Premium chocolate</strong><br>
+                            <strong>• Soft & chewy texture</strong>
+                        </div>
+                    </div>
 
-  <section id="contact">
-    <h2>Contact</h2>
-    <p>Email: <a href="mailto:erin@bakedbyerin.com">erin@bakedbyerin.com</a></p>
-    <p>Phone: (XXX) XXX-XXXX</p>
-    <p>Follow me on <a href="https://instagram.com/bakedbyerin" target="_blank">Instagram</a></p>
-  </section>
+                    <!-- Blueberry Muffins -->
+                    <div class="product-card rounded-lg p-6 text-center">
+                        <div class="text-6xl mb-4">🧁</div>
+                        <h3 class="text-xl font-bold mb-3 text-[#8b4513]">Blueberry Muffins</h3>
+                        <div class="border-b border-gray-200 pb-3 mb-3">
+                            <p class="text-gray-600 text-sm">
+                                Fluffy morning treats bursting with fresh seasonal blueberries
+                            </p>
+                        </div>
+                        <p class="price-text">Morning Special</p>
+                        <div class="mt-4 p-3 bg-gray-50 rounded text-left text-sm">
+                            <strong>• Fresh blueberries</strong><br>
+                            <strong>• Light & fluffy</strong><br>
+                            <strong>• Perfect with coffee</strong>
+                        </div>
+                    </div>
 
-  <footer>
-    <p>&copy; 2025 Baked by Erin. All rights reserved.</p>
-  </footer>
-  <div id="imgModal" class="modal">
-  <span class="close" onclick="document.getElementById('imgModal').style.display='none'">&times;</span>
-  <img class="modal-content" id="modalImg">
-</div>
+                    <!-- Red Velvet Cupcakes -->
+                    <div class="product-card rounded-lg p-6 text-center">
+                        <div class="text-6xl mb-4">🎂</div>
+                        <h3 class="text-xl font-bold mb-3 text-[#8b4513]">Red Velvet Cupcakes</h3>
+                        <div class="border-b border-gray-200 pb-3 mb-3">
+                            <p class="text-gray-600 text-sm">
+                                Rich, moist cupcakes topped with cream cheese frosting
+                            </p>
+                        </div>
+                        <p class="price-text">Special Occasion</p>
+                        <div class="mt-4 p-3 bg-gray-50 rounded text-left text-sm">
+                            <strong>• Cream cheese frosting</strong><br>
+                            <strong>• Moist & tender</strong><br>
+                            <strong>• Beautiful presentation</strong>
+                        </div>
+                    </div>
 
-<script>
-  const modal = document.getElementById("imgModal");
-  const modalImg = document.getElementById("modalImg");
-  document.querySelectorAll("#pictures img").forEach(img => {
-    img.onclick = () => {
-      modal.style.display = "block";
-      modalImg.src = img.src;
-    };
-  });
-</script>
+                    <!-- Sourdough Bread -->
+                    <div class="product-card rounded-lg p-6 text-center">
+                        <div class="text-6xl mb-4">🍞</div>
+                        <h3 class="text-xl font-bold mb-3 text-[#8b4513]">Sourdough Bread</h3>
+                        <div class="border-b border-gray-200 pb-3 mb-3">
+                            <p class="text-gray-600 text-sm">
+                                Traditional artisan sourdough with perfect crust and tang
+                            </p>
+                        </div>
+                        <p class="price-text">Artisan Craft</p>
+                        <div class="mt-4 p-3 bg-gray-50 rounded text-left text-sm">
+                            <strong>• 48-hour fermentation</strong><br>
+                            <strong>• Crispy crust</strong><br>
+                            <strong>• Complex flavors</strong>
+                        </div>
+                    </div>
+
+                    <!-- Seasonal Pies -->
+                    <div class="product-card rounded-lg p-6 text-center">
+                        <div class="text-6xl mb-4">🥧</div>
+                        <h3 class="text-xl font-bold mb-3 text-[#8b4513]">Seasonal Pies & Tarts</h3>
+                        <div class="border-b border-gray-200 pb-3 mb-3">
+                            <p class="text-gray-600 text-sm">
+                                Rotating selection featuring the best seasonal ingredients
+                            </p>
+                        </div>
+                        <p class="price-text">Limited Time</p>
+                        <div class="mt-4 p-3 bg-gray-50 rounded text-left text-sm">
+                            <strong>• Seasonal ingredients</strong><br>
+                            <strong>• Buttery crust</strong><br>
+                            <strong>• Made to order</strong>
+                        </div>
+                    </div>
+
+                    <!-- Custom Orders -->
+                    <div class="product-card rounded-lg p-6 text-center">
+                        <div class="text-6xl mb-4">✨</div>
+                        <h3 class="text-xl font-bold mb-3 text-[#8b4513]">Custom Orders</h3>
+                        <div class="border-b border-gray-200 pb-3 mb-3">
+                            <p class="text-gray-600 text-sm">
+                                Personalized treats for birthdays, weddings, and special events
+                            </p>
+                        </div>
+                        <p class="price-text">By Request</p>
+                        <div class="mt-4 p-3 bg-gray-50 rounded text-left text-sm">
+                            <strong>• Custom designs</strong><br>
+                            <strong>• Special dietary options</strong><br>
+                            <strong>• Event catering</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pictures Gallery -->
+        <section id="pictures" class="py-16 px-4 bg-gray-50">
+            <div class="container mx-auto">
+                <h2 class="section-heading text-center mb-12">Fresh From The Oven</h2>
+                
+                <div class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                    <!-- Placeholder images with alt text -->
+                    <div class="bg-white rounded-lg overflow-hidden shadow-lg">
+                        <div class="aspect-square bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center">
+                            <div class="text-center">
+                                <span class="text-6xl">🍪</span>
+                                <p class="text-sm font-medium text-gray-700 mt-2">Chocolate Chip Cookies</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg overflow-hidden shadow-lg">
+                        <div class="aspect-square bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
+                            <div class="text-center">
+                                <span class="text-6xl">🧁</span>
+                                <p class="text-sm font-medium text-gray-700 mt-2">Blueberry Muffins</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg overflow-hidden shadow-lg">
+                        <div class="aspect-square bg-gradient-to-br from-red-100 to-red-200 flex items-center justify-center">
+                            <div class="text-center">
+                                <span class="text-6xl">🎂</span>
+                                <p class="text-sm font-medium text-gray-700 mt-2">Red Velvet Cupcakes</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-8">
+                    <p class="text-gray-600 text-sm">
+                        Follow us on <a href="https://instagram.com/bakedbyerin" class="text-[#d4734a] font-medium hover:underline" target="_blank">Instagram</a> for daily photos of fresh bakes!
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-16 px-4">
+            <div class="container mx-auto max-w-4xl">
+                <h2 class="section-heading text-center mb-12">Get In Touch</h2>
+                
+                <div class="grid md:grid-cols-2 gap-12">
+                    <!-- Contact Info -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-6 text-[#8b4513]">Contact Information</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-2xl">📧</span>
+                                <div>
+                                    <p class="font-medium">Email</p>
+                                    <a href="mailto:erin@bakedbyerin.com" class="text-[#d4734a] hover:underline">
+                                        erin@bakedbyerin.com
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-3">
+                                <span class="text-2xl">📱</span>
+                                <div>
+                                    <p class="font-medium">Phone</p>
+                                    <a href="tel:+1234567890" class="text-[#d4734a] hover:underline">
+                                        (XXX) XXX-XXXX
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-3">
+                                <span class="text-2xl">📸</span>
+                                <div>
+                                    <p class="font-medium">Instagram</p>
+                                    <a href="https://instagram.com/bakedbyerin" target="_blank" class="text-[#d4734a] hover:underline">
+                                        @bakedbyerin
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Order Form -->
+                    <div class="bg-gray-50 p-6 rounded-lg">
+                        <h3 class="text-xl font-bold mb-6 text-[#8b4513]">Place an Order</h3>
+                        <form class="space-y-4">
+                            <div>
+                                <input 
+                                    type="text" 
+                                    placeholder="Your Name" 
+                                    class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-[#d4734a]"
+                                    required
+                                >
+                            </div>
+                            <div>
+                                <input 
+                                    type="email" 
+                                    placeholder="Email Address" 
+                                    class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-[#d4734a]"
+                                    required
+                                >
+                            </div>
+                            <div>
+                                <select class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-[#d4734a]" required>
+                                    <option value="">Select Item</option>
+                                    <option value="cookies">Chocolate Chip Cookies</option>
+                                    <option value="muffins">Blueberry Muffins</option>
+                                    <option value="cupcakes">Red Velvet Cupcakes</option>
+                                    <option value="sourdough">Sourdough Bread</option>
+                                    <option value="pies">Seasonal Pies & Tarts</option>
+                                    <option value="custom">Custom Order</option>
+                                </select>
+                            </div>
+                            <div>
+                                <textarea 
+                                    placeholder="Special requests or details..." 
+                                    rows="4" 
+                                    class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-[#d4734a]"
+                                ></textarea>
+                            </div>
+                            <button type="submit" class="btn-primary w-full px-6 py-3 rounded">
+                                Send Order Request
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter Section -->
+        <section class="py-16 px-4 bg-gray-50">
+            <div class="container mx-auto text-center max-w-2xl">
+                <h2 class="section-heading mb-4">Stay Sweet</h2>
+                <p class="text-lg text-gray-600 mb-8">
+                    Get weekly updates on fresh bakes and seasonal specials
+                </p>
+                
+                <div class="flex max-w-md mx-auto">
+                    <input 
+                        type="email" 
+                        placeholder="Enter your email" 
+                        class="flex-1 px-4 py-3 border border-gray-300 rounded-l focus:outline-none focus:border-[#d4734a]"
+                    >
+                    <button class="btn-primary px-6 py-3 rounded-r">
+                        Subscribe
+                    </button>
+                </div>
+                
+                <p class="text-xs text-gray-500 mt-4">
+                    Sweet treats and no spam, promise!
+                </p>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="text-center py-8 border-t border-gray-200">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-center space-x-8 mb-4 text-sm">
+                <a href="#about" class="text-gray-600 hover:text-[#d4734a]">About</a>
+                <a href="#menu" class="text-gray-600 hover:text-[#d4734a]">Menu</a>
+                <a href="#contact" class="text-gray-600 hover:text-[#d4734a]">Contact</a>
+                <a href="https://instagram.com/bakedbyerin" class="text-gray-600 hover:text-[#d4734a]" target="_blank">Instagram</a>
+            </div>
+            <p class="text-gray-500 text-sm">&copy; 2025 Baked by Erin. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Contact form handling
+            const contactForm = document.querySelector('form');
+            if (contactForm) {
+                contactForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    alert('Thank you for your order request! Erin will contact you soon. (This is a demo)');
+                    contactForm.reset();
+                });
+            }
+
+            // Newsletter form handling
+            const newsletterInput = document.querySelector('input[type="email"]');
+            const newsletterButton = document.querySelector('.btn-primary');
+            
+            if (newsletterInput && newsletterButton) {
+                newsletterButton.addEventListener('click', (e) => {
+                    if (e.target.textContent.trim() === 'Subscribe') {
+                        e.preventDefault();
+                        const email = newsletterInput.value;
+                        if (email) {
+                            alert('Thanks for subscribing to sweet updates! (This is a demo)');
+                            newsletterInput.value = '';
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
