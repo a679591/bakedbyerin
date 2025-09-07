@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Baked by Erin – Gallery</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #fff;
+      color: #2d2d2d;
+    }
+    .section-heading {
+      font-size: 2rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #8b4513;
+    }
+    .minimal-nav {
+      background: white;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .btn-primary {
+      background-color: #d4734a;
+      color: white;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      background-color: #c55a35;
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- Header -->
+  <header class="minimal-nav sticky top-0 z-50">
+    <nav class="container mx-auto px-4 py-4">
+      <div class="flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold text-[#8b4513]">🧁 BAKED BY ERIN</a>
+        <div class="hidden md:flex space-x-8 text-sm font-medium uppercase tracking-wide">
+          <a href="index.html" class="hover:text-[#d4734a]">Home</a>
+          <a href="menu.html" class="hover:text-[#d4734a]">Menu</a>
+          <a href="gallery.html" class="hover:text-[#d4734a]">Gallery</a>
+          <a href="contact.html" class="hover:text-[#d4734a]">Contact</a>
+        </div>
+        <a href="order.html" class="btn-primary px-6 py-2 rounded text-sm">Order Now</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Gallery Section -->
+  <main>
+    <section class="py-16 px-4 bg-gray-50">
+      <div class="container mx-auto">
+        <h2 class="section-heading text-center mb-12">Fresh From The Oven</h2>
+        <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <!-- Treat Card -->
+          <div class="bg-white rounded-lg shadow hover:shadow-lg transition p-6 text-center">
+            <div class="text-6xl mb-4">🍞</div>
+            <p class="font-semibold text-gray-700">Espresso Banana Bread</p>
+          </div>
+          <div class="bg-white rounded-lg shadow hover:shadow-lg transition p-6 text-center">
+            <div class="text-6xl mb-4">🍫</div>
+            <p class="font-semibold text-gray-700">Double Chocolate Banana Bread</p>
+          </div>
+          <div class="bg-white rounded-lg shadow hover:shadow-lg transition p-6 text-center">
+            <div class="text-6xl mb-4">🥕</div>
+            <p class="font-semibold text-gray-700">Carrot Cake</p>
+          </div>
+          <div class="bg-white rounded-lg shadow hover:shadow-lg transition p-6 text-center">
+            <div class="text-6xl mb-4">🌰</div>
+            <p class="font-semibold text-gray-700">Zucchini Walnut Bread</p>
+          </div>
+          <div class="bg-white rounded-lg shadow hover:shadow-lg transition p-6 text-center">
+            <div class="text-6xl mb-4">🥜</div>
+            <p class="font-semibold text-gray-700">Peanut Butter Granola</p>
+          </div>
+          <div class="bg-white rounded-lg shadow hover:shadow-lg transition p-6 text-center">
+            <div class="text-6xl mb-4">🎂</div>
+            <p class="font-semibold text-gray-700">Chocolate Cake</p>
+          </div>
+        </div>
+        <div class="text-center mt-10">
+          <p class="text-gray-600 text-sm">
+            Follow us on <a href="https://instagram.com/bakedbyerin" target="_blank" class="text-[#d4734a] font-medium hover:underline">Instagram</a> for daily bakes!
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center py-8 border-t border-gray-200">
+    <div class="container mx-auto px-4">
+      <div class="flex justify-center space-x-8 mb-4 text-sm">
+        <a href="index.html#about" class="text-gray-600 hover:text-[#d4734a]">About</a>
+        <a href="menu.html" class="text-gray-600 hover:text-[#d4734a]">Menu</a>
+        <a href="contact.html" class="text-gray-600 hover:text-[#d4734a]">Contact</a>
+        <!--<a href="https://instagram.com/bakedbyerin" target="_blank" class="text-gray-600 hover:text-[#d4734a]">Instagram</a>-->
+      </div>
+      <p class="text-gray-500 text-sm">&copy; 2025 Baked by Erin. All rights reserved.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

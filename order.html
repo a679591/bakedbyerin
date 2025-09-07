@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Baked by Erin – Place an Order</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #ffffff;
+      color: #2d2d2d;
+    }
+
+    .section-heading {
+      font-size: 2rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #8b4513;
+    }
+
+    .minimal-nav {
+      background: white;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .btn-primary {
+      background-color: #d4734a;
+      color: white;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: #c55a35;
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- Header -->
+  <header class="minimal-nav sticky top-0 z-50">
+    <nav class="container mx-auto px-4 py-4">
+      <div class="flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold text-[#8b4513]">🧁 BAKED BY ERIN</a>
+        <div class="hidden md:flex space-x-8 text-sm font-medium uppercase tracking-wide">
+          <a href="index.html" class="hover:text-[#d4734a]">Home</a>
+          <a href="menu.html" class="hover:text-[#d4734a]">Menu</a>
+          <a href="index.html#pictures" class="hover:text-[#d4734a]">Gallery</a>
+          <a href="contact.html" class="hover:text-[#d4734a]">Contact</a>
+        </div>
+        <a href="order.html" class="btn-primary px-6 py-2 rounded text-sm">Order Now</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Place an Order -->
+    <section class="py-16 px-4">
+      <div class="container mx-auto max-w-4xl">
+        <h2 class="section-heading text-center mb-12">Place an Order</h2>
+        <div class="bg-gray-50 p-6 rounded-lg">
+          <form class="space-y-4">
+            <input type="text" placeholder="Your Name" required
+              class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-[#d4734a]">
+            <input type="email" placeholder="Email Address" required
+              class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-[#d4734a]">
+            <select required
+              class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-[#d4734a]">
+              <option value="">Select Item</option>
+              <option>Carrot Cake 8"</option>
+              <option>Chocolate Cake 8"</option>
+              <option>Espresso Banana Bread</option>
+              <option>Double Chocolate Banana Bread</option>
+              <option>Carrot Zucchini Walnut Bread</option>
+              <option>Chunky Peanut Butter Granola</option>
+            </select>
+            <button type="submit" class="btn-primary w-full px-6 py-3 rounded">
+              Send Order Request
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="text-center py-8 border-t border-gray-200">
+    <p class="text-gray-500 text-sm">&copy; 2025 Baked by Erin. All rights reserved.</p>
+  </footer>
+
+  <script>
+    document.querySelector('form').addEventListener('submit', e => {
+      e.preventDefault();
+      alert('Thank you for your order request! Erin will contact you soon. (Demo)');
+      e.target.reset();
+    });
+  </script>
+</body>
+</html>

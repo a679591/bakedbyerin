@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Baked by Erin – Contact</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #ffffff;
+      color: #2d2d2d;
+    }
+
+    .section-heading {
+      font-size: 2rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #8b4513;
+    }
+
+    .minimal-nav {
+      background: white;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .btn-primary {
+      background-color: #d4734a;
+      color: white;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: #c55a35;
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- Header -->
+  <header class="minimal-nav sticky top-0 z-50">
+    <nav class="container mx-auto px-4 py-4">
+      <div class="flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold text-[#8b4513]">🧁 BAKED BY ERIN</a>
+        <div class="hidden md:flex space-x-8 text-sm font-medium uppercase tracking-wide">
+          <a href="index.html" class="hover:text-[#d4734a]">Home</a>
+          <a href="menu.html" class="hover:text-[#d4734a]">Menu</a>
+          <a href="index.html#pictures" class="hover:text-[#d4734a]">Gallery</a>
+          <a href="contact.html" class="hover:text-[#d4734a]">Contact</a>
+        </div>
+        <a href="order.html" class="btn-primary px-6 py-2 rounded text-sm">Order Now</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Contact Information -->
+    <section id="contact" class="py-16 px-4">
+      <div class="container mx-auto max-w-4xl text-center">
+        <h2 class="section-heading mb-12">Get In Touch</h2>
+        <div class="space-y-8">
+          <div class="flex items-center justify-center space-x-4">
+            <span class="text-2xl">📧</span>
+            <div>
+              <p class="font-medium">Email</p>
+              <a href="mailto:erin@bakedbyerin.com" class="text-[#d4734a] hover:underline">
+                erinjillianrodriguez@gmail.com
+              </a>
+            </div>
+          </div>
+          <div class="flex items-center justify-center space-x-4">
+            <span class="text-2xl">📱</span>
+            <div>
+              <p class="font-medium">Phone</p>
+              <a href="tel:+1234567890" class="text-[#d4734a] hover:underline">
+                (XXX) XXX-XXXX
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="text-center py-8 border-t border-gray-200">
+    <div class="container mx-auto px-4">
+      <p class="text-gray-500 text-sm">&copy; 2025 Baked by Erin. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>
