@@ -45,26 +45,111 @@
       background-color: #c55a35;
       transform: translateY(-1px);
     }
+/* Nav layout */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.nav-logo {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: #8b4513;
+  text-decoration: none;
+}
+
+.nav-menu {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #2d2d2d;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-link:hover {
+  color: #d4734a;
+}
+
+/* Hamburger — hidden on desktop */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.bar {
+  width: 25px;
+  height: 3px;
+  background-color: #2d2d2d;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .nav-menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 65px;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #e5e7eb;
+    gap: 1rem;
+  }
+
+  .nav-menu.active {
+    display: flex;
+  }
+}
   </style>
 </head>
 <body class="antialiased">
 
   <!-- Header -->
-  <header class="minimal-nav sticky top-0 z-50">
-    <nav class="container mx-auto px-4 py-4">
-      <div class="flex justify-between items-center">
-        <a href="index.html" class="text-2xl font-bold text-[#8b4513]">🧁 BAKED BY ERIN</a>
-        <div class="hidden md:flex space-x-8 text-sm font-medium uppercase tracking-wide">
-          <a href="index.html" class="hover:text-[#d4734a]">Home</a>
-          <a href="menu.html" class="hover:text-[#d4734a]">Menu</a>
-          <a href="passover_menu.html" class="hover:text-[#d4734a]">Passover Menu</a>
-          <a href="contact.html" class="hover:text-[#d4734a]">Contact</a>
-        </div>
-        <a href="order.html" class="btn-primary px-6 py-2 rounded text-sm">Order Now</a>
-      </div>
-    </nav>
-  </header>
-
+<header class="header">
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">🧁 BAKED BY ERIN</a>
+    <ul class="nav-menu">
+      <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+      <li class="nav-item"><a href="menu.html" class="nav-link">Menu</a></li>
+      <li class="nav-item"><a href="passover_menu.html" class="nav-link">Passover Menu</a></li>
+      <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+      <li class="nav-item"><a href="order.html" class="nav-link">Order Now</a></li>
+    </ul>
+    <div class="hamburger">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </div>
+  </nav>
+</header>
   <main>
     <!-- Place an Order -->
     <section class="py-16 px-4">
@@ -114,15 +199,21 @@
       e.target.reset();
     });
   </script>
+
+  <script>
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+
+    hamburger.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+    });
+
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('active');
+      });
+    });
+  </script>
+
 </body>
-
 </html>
-
-
-
-
-
-
-
-
-
