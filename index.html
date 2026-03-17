@@ -11,11 +11,7 @@
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background-image: url('/images/background_color.png');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
+      background-color: #ffffff;
       color: #2d2d2d;
     }
 
@@ -58,25 +54,110 @@
         font-size: 3rem;
       }
     }
+/* Nav layout */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.nav-logo {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: #8b4513;
+  text-decoration: none;
+}
+
+.nav-menu {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #2d2d2d;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-link:hover {
+  color: #d4734a;
+}
+
+/* Hamburger — hidden on desktop */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.bar {
+  width: 25px;
+  height: 3px;
+  background-color: #2d2d2d;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .nav-menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 65px;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #e5e7eb;
+    gap: 1rem;
+  }
+
+  .nav-menu.active {
+    display: flex;
+  }
+}
   </style>
 </head>
 <body class="antialiased">
 
   <!-- Header -->
-  <header class="minimal-nav sticky top-0 z-50">
-    <nav class="container mx-auto px-4 py-4">
-      <div class="flex justify-between items-center">
-        <a href="index.html" class="text-2xl font-bold text-[#8b4513]">🧁 BAKED BY ERIN</a>
-        <div class="hidden md:flex space-x-8 text-sm font-medium uppercase tracking-wide">
-          <a href="index.html#about" class="hover:text-[#d4734a]">About</a>
-          <a href="menu.html" class="hover:text-[#d4734a]">Menu</a>
-          <a href="passover_menu.html" class="hover:text-[#d4734a]">Passover Menu</a>
-          <a href="contact.html" class="hover:text-[#d4734a]">Contact</a>
-        </div>
-        <a href="order.html" class="btn-primary px-6 py-2 rounded text-sm">Order Now</a>
+  <header class="header">
+    <nav class="navbar">
+      <a href="#" class="nav-logo">🧁 Baked by Erin</a>
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="index.html#about" class="nav-link">About</a></li>
+        <li class="nav-item"><a href="menu.html" class="nav-link">Menu</a></li>
+        <li class="nav-item"><a href="passover_menu.html" class="nav-link">Passover Menu</a></li>
+        <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+      </ul>
+      <div class="hamburger">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
       </div>
     </nav>
-  </header>
+  </header>   
 
   <main>
     <!-- Hero Section -->
@@ -84,7 +165,7 @@
       <div class="container mx-auto max-w-4xl">
         <h1 class="hero-text text-[#8b4513] mb-6">FRESHLY BAKED TREATS</h1>
         <p class="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-          It's not just banana bread, it's your new favorite ritual
+          Handcrafted treats made with love for every occasion
         </p>
         <a href="menu.html" class="btn-primary px-8 py-3 rounded text-lg inline-block">View Menu</a>
       </div>
@@ -99,10 +180,9 @@
             <span class="text-5xl">👩‍🍳</span>
           </div>
           <p class="text-lg text-gray-600 leading-relaxed">
-            Hi, I’m Erin — a home baker obsessed with creating mouthwatering treats for every occasion.
+            Hi, I’m Erin—a home baker obsessed with creating mouthwatering treats for every occasion.
             Whether you’re craving classic cakes or artisanal breads, I pour my heart into every batch.
-            Each recipe is crafted with premium ingredients and years of passion for the perfect bite. 
-            Great for gifts, gatherings, and parties. 
+            Each recipe is crafted with premium ingredients and years of passion for the perfect bite.
           </p>
         </div>
       </div>
@@ -116,7 +196,7 @@
         <a href="index.html#about" class="text-gray-600 hover:text-[#d4734a]">About</a>
         <a href="menu.html" class="text-gray-600 hover:text-[#d4734a]">Menu</a>
         <a href="contact.html" class="text-gray-600 hover:text-[#d4734a]">Contact</a>
-        <a href="https://instagram.com/getbakedbyerin" target="_blank" class="text-gray-600 hover:text-[#d4734a]">Instagram</a>
+        <a href="https://instagram.com/bakedbyerin" target="_blank" class="text-gray-600 hover:text-[#d4734a]">Instagram</a>
       </div>
       <p class="text-gray-500 text-sm">&copy; 2025 Baked by Erin. All rights reserved.</p>
     </div>
@@ -130,6 +210,19 @@
         if (target) {
           target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+      });
+    });
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+
+    hamburger.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+    });
+
+    // Close menu when a link is clicked
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('active');
       });
     });
   </script>
