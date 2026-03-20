@@ -18,19 +18,16 @@
       background-attachment: fixed;
       color: #2d2d2d;
     }
-
     .product-card {
       border: 1px solid #e5e7eb;
       background: #ffffff;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       transition: all 0.3s ease;
     }
-
     .product-card:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
-
     .section-heading {
       font-size: 2rem;
       font-weight: 700;
@@ -38,12 +35,6 @@
       letter-spacing: 0.05em;
       color: #8b4513;
     }
-
-    .minimal-nav {
-      background: white;
-      border-bottom: 1px solid #e5e7eb;
-    }
-
     .btn-primary {
       background-color: #d4734a;
       color: white;
@@ -52,249 +43,243 @@
       letter-spacing: 0.05em;
       transition: all 0.3s ease;
     }
-
     .btn-primary:hover {
       background-color: #c55a35;
       transform: translateY(-1px);
     }
-
     .price-text {
       color: #6b7280;
       font-size: 0.875rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
-/* Nav layout */
-.header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: white;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.nav-logo {
-  font-weight: 700;
-  font-size: 1.25rem;
-  color: #8b4513;
-  text-decoration: none;
-}
-
-.nav-menu {
-  display: flex;
-  gap: 2rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.nav-link {
-  text-decoration: none;
-  color: #2d2d2d;
-  font-weight: 500;
-  transition: color 0.2s;
-}
-
-.nav-link:hover {
-  color: #d4734a;
-}
-
-/* Hamburger — hidden on desktop */
-.hamburger {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  cursor: pointer;
-}
-
-.bar {
-  width: 25px;
-  height: 3px;
-  background-color: #2d2d2d;
-  border-radius: 3px;
-  transition: all 0.3s ease;
-}
-
-/* Mobile styles */
-@media (max-width: 768px) {
-  .hamburger {
-    display: flex;
-  }
-
-  .nav-menu {
-    display: none;
-    flex-direction: column;
-    position: absolute;
-    top: 65px;
-    left: 0;
-    right: 0;
-    background: white;
-    padding: 1rem 2rem;
-    border-bottom: 1px solid #e5e7eb;
-    gap: 1rem;
-  }
-
-  .nav-menu.active {
-    display: flex;
-  }
-}
+    .add-to-cart-btn {
+      background-color: #8b4513;
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      width: 100%;
+      margin-top: 12px;
+    }
+    .add-to-cart-btn:hover {
+      background-color: #7a3b10;
+      transform: translateY(-1px);
+    }
+    /* ── Nav ── */
+    .header {
+      position: sticky; top: 0; z-index: 100;
+      background: white; border-bottom: 1px solid #e5e7eb;
+    }
+    .navbar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 2rem; max-width: 1100px; margin: 0 auto;
+    }
+    .nav-logo { font-weight: 700; font-size: 1.2rem; color: #8b4513; text-decoration: none; }
+    .nav-menu { display: flex; gap: 2rem; list-style: none; margin: 0; padding: 0; align-items: center; }
+    .nav-link { text-decoration: none; color: #2d2d2d; font-weight: 500; transition: color 0.2s; }
+    .nav-link:hover { color: #d4734a; }
+    .cart-link { position: relative; text-decoration: none; font-size: 1.4rem; }
+    #cart-badge {
+      position: absolute; top: -8px; right: -10px;
+      background: #d4734a; color: white; border-radius: 50%;
+      width: 18px; height: 18px; font-size: 0.65rem; font-weight: 700;
+      display: none; align-items: center; justify-content: center;
+    }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .bar { width: 25px; height: 3px; background: #2d2d2d; border-radius: 3px; transition: all 0.3s ease; }
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+    @media (max-width: 768px) {
+      .hamburger { display: flex; }
+      .nav-menu {
+        display: none; flex-direction: column;
+        position: absolute; top: 65px; left: 0; right: 0;
+        background: white; padding: 1rem 2rem;
+        border-bottom: 1px solid #e5e7eb; gap: 1rem; align-items: flex-start;
+      }
+      .nav-menu.active { display: flex; }
+    }
   </style>
 </head>
 <body class="antialiased">
 
-  <!-- Header -->
-<header class="header">
-  <nav class="navbar">
-    <a href="index.html" class="nav-logo">🧁 BAKED BY ERIN</a>
-    <ul class="nav-menu">
-      <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
-      <li class="nav-item"><a href="menu.html" class="nav-link">Menu</a></li>
-      <li class="nav-item"><a href="passover_menu.html" class="nav-link">Passover Menu</a></li>
-      <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
-      <li class="nav-item"><a href="order.html" class="nav-link">Order Now</a></li>
-    </ul>
-    <div class="hamburger">
-      <span class="bar"></span>
-      <span class="bar"></span>
-      <span class="bar"></span>
-    </div>
-  </nav>
-</header>
+  <header class="header">
+    <nav class="navbar">
+      <a href="index.html" class="nav-logo">🧁 BAKED BY ERIN</a>
+      <ul class="nav-menu">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="menu.html" class="nav-link">Menu</a></li>
+        <li><a href="passover_menu.html" class="nav-link">Passover Menu</a></li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+        <li>
+          <a href="cart.html" class="cart-link" title="View Cart">
+            🛒
+            <span id="cart-badge"></span>
+          </a>
+        </li>
+      </ul>
+      <button class="hamburger" aria-label="Open menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+    </nav>
+  </header>
+
   <main>
-    <!-- Menu Section -->
     <section id="menu" class="py-16 px-4">
       <div class="container mx-auto">
         <h2 class="section-heading text-center mb-12">Our Menu</h2>
-       <div class="space-y-12 max-w-3xl mx-auto px-4">
-      <!-- Espresso Banana Bread -->
-              <div class="product-card rounded-lg p-6 text-center">
-                <img src="/images/banana_espresso_bread.jpg" alt="Banana Espresso Bread" class="mb-4 mx-auto rounded shadow-md">
-                <h3 class="text-xl font-bold mb-3 text-[#8b4513]">Banana Espresso Bread - Small $15 and Large $30</h3>
-                <div class="border-b border-gray-200 pb-3 mb-3">
-                  <p class="text-gray-600 text-sm">A bold twist on classic banana bread with espresso infusion</p>
-                </div>
-                <p class="price-text">Flavors to Order</p>
-                <div class="mt-4 p-3 bg-gray-50 rounded text-left text-sm">
-                  <strong>• With Chocolate Chips</strong><br>
-                  <strong>• Without Chocolate Chips</strong><br>
-                  <strong>• Moist texture</strong>
-                </div>
-              </div>
+        <div class="space-y-12 max-w-3xl mx-auto px-4">
 
-      <!-- Double Chocolate Banana Bread -->
-              <div class="product-card rounded-lg p-6 text-center">
-                <img src="/images/double_chocolate_banana_bread.jpg" alt="Double Chocolate Banana Bread" class="mb-4 mx-auto rounded shadow-md">
-                <h3 class="text-xl font-bold mb-3 text-[#8b4513]">Double Chocolate Banana Bread - Small $15 and Large $30</h3>
-                <div class="border-b border-gray-200 pb-3 mb-3">
-                  <p class="text-gray-600 text-sm">Banana bread loaded with cocoa and chocolate chips</p>
-                </div>
-                <p class="price-text">Fan Favorite</p>
-                <div class="mt-4 p-3 bg-gray-50 rounded text-left text-sm">
-                  <strong>• Rich cocoa base</strong><br>
-                  <strong>• Semi-sweet chips</strong><br>
-                  <strong>• Perfect for dessert</strong>
-                </div>
-              </div>
+          <!-- Espresso Banana Bread -->
+          <div class="product-card rounded-lg p-6 text-center">
+            <img src="/images/banana_espresso_bread.jpg" alt="Banana Espresso Bread" class="mb-4 mx-auto rounded shadow-md">
+            <h3 class="text-xl font-bold mb-1 text-[#8b4513]">Banana Espresso Bread</h3>
+            <p class="text-gray-500 font-semibold mb-3">Small $15 &nbsp;|&nbsp; Large $30</p>
+            <div class="border-b border-gray-200 pb-3 mb-3">
+              <p class="text-gray-600 text-sm">A bold twist on classic banana bread with espresso infusion</p>
+            </div>
+            <div class="mt-4 p-3 bg-gray-50 rounded text-left text-sm mb-2">
+              <strong>• With Chocolate Chips</strong><br>
+              <strong>• Without Chocolate Chips</strong><br>
+              <strong>• Moist texture</strong>
+            </div>
+            <div class="flex gap-2 mt-3">
+              <button class="add-to-cart-btn" onclick="addToCart('espresso-small','Banana Espresso Bread (Small)',15,'$15')">
+                + Small – $15
+              </button>
+              <button class="add-to-cart-btn" onclick="addToCart('espresso-large','Banana Espresso Bread (Large)',30,'$30')">
+                + Large – $30
+              </button>
+            </div>
+          </div>
 
-      <!-- Carrot Zucchini Walnut Bread -->
-              <div class="product-card rounded-lg p-6 text-center">
-                <img src="/images/carrot_zucchini_walnut_bread.jpg" alt="Carrot Zucchini Walnut Bread" class="mb-4 mx-auto rounded shadow-md">
-                <h3 class="text-xl font-bold mb-3 text-[#8b4513]">Carrot Zucchini Walnut Bread - $30</h3>
-                <div class="border-b border-gray-200 pb-3 mb-3">
-                  <p class="text-gray-600 text-sm">Nutritious and hearty loaf with a blend of veggies and nuts</p>
-                </div>
-                <p class="price-text">Healthy Pick</p>
-                <div class="mt-4 p-3 bg-gray-50 rounded text-left text-sm">
-                  <strong>• No refined sugar</strong><br>
-                  <strong>• Packed with veggies</strong><br>
-                  <strong>• Crunchy walnut texture</strong>
-                </div>
-              </div>
+          <!-- Double Chocolate Banana Bread -->
+          <div class="product-card rounded-lg p-6 text-center">
+            <img src="/images/double_chocolate_banana_bread.jpg" alt="Double Chocolate Banana Bread" class="mb-4 mx-auto rounded shadow-md">
+            <h3 class="text-xl font-bold mb-1 text-[#8b4513]">Double Chocolate Banana Bread</h3>
+            <p class="text-gray-500 font-semibold mb-3">Small $15 &nbsp;|&nbsp; Large $30</p>
+            <div class="border-b border-gray-200 pb-3 mb-3">
+              <p class="text-gray-600 text-sm">Banana bread loaded with cocoa and chocolate chips</p>
+            </div>
+            <div class="mt-4 p-3 bg-gray-50 rounded text-left text-sm mb-2">
+              <strong>• Rich cocoa base</strong><br>
+              <strong>• Semi-sweet chips</strong><br>
+              <strong>• Perfect for dessert</strong>
+            </div>
+            <div class="flex gap-2 mt-3">
+              <button class="add-to-cart-btn" onclick="addToCart('choc-banana-small','Double Chocolate Banana Bread (Small)',15,'$15')">
+                + Small – $15
+              </button>
+              <button class="add-to-cart-btn" onclick="addToCart('choc-banana-large','Double Chocolate Banana Bread (Large)',30,'$30')">
+                + Large – $30
+              </button>
+            </div>
+          </div>
 
-      <!-- Chunky Peanut Butter Granola -->
-              <div class="product-card rounded-lg p-6 text-center">
-                <img src="/images/peanut_butter_granola.jpg" alt="Chunky Peanut Butter Granola" class="mb-4 mx-auto rounded shadow-md">
-                <h3 class="text-xl font-bold mb-3 text-[#8b4513]">Chunky Peanut Butter Granola - Contact for price</h3>
-                <div class="border-b border-gray-200 pb-3 mb-3">
-                  <p class="text-gray-600 text-sm">Crunchy clusters with oats, seeds, and creamy peanut butter</p>
-                </div>
-                <p class="price-text">Snack Ready</p>
-                <div class="mt-4 p-3 bg-gray-50 rounded text-left text-sm">
-                  <strong>• No preservatives</strong><br>
-                  <strong>• Chunky clusters</strong><br>
-                  <strong>• Great for breakfast or snacking</strong>
-                </div>
-              </div>
+          <!-- Carrot Zucchini Walnut Bread -->
+          <div class="product-card rounded-lg p-6 text-center">
+            <img src="/images/carrot_zucchini_walnut_bread.jpg" alt="Carrot Zucchini Walnut Bread" class="mb-4 mx-auto rounded shadow-md">
+            <h3 class="text-xl font-bold mb-1 text-[#8b4513]">Carrot Zucchini Walnut Bread</h3>
+            <p class="text-gray-500 font-semibold mb-3">$30</p>
+            <div class="border-b border-gray-200 pb-3 mb-3">
+              <p class="text-gray-600 text-sm">Nutritious and hearty loaf with a blend of veggies and nuts</p>
+            </div>
+            <div class="mt-4 p-3 bg-gray-50 rounded text-left text-sm mb-2">
+              <strong>• No refined sugar</strong><br>
+              <strong>• Packed with veggies</strong><br>
+              <strong>• Crunchy walnut texture</strong>
+            </div>
+            <button class="add-to-cart-btn" onclick="addToCart('carrot-zucchini','Carrot Zucchini Walnut Bread',30,'$30')">
+              + Add to Cart – $30
+            </button>
+          </div>
 
-      <!-- Carrot Cake 8" -->
-              <div class="product-card rounded-lg p-6 text-center">
-                <img src="/images/carrot_cake.jpg" alt="Carrot Cake 8 inch" class="mb-4 mx-auto rounded shadow-md">
-                <h3 class="text-xl font-bold mb-3 text-[#8b4513]">Carrot Cake 8" - $45</h3>
-                <div class="border-b border-gray-200 pb-3 mb-3">
-                  <p class="text-gray-600 text-sm">Moist and spiced with cinnamon, topped with cream cheese frosting</p>
-                </div>
-                <p class="price-text">Made to Order</p>
-                <div class="mt-4 p-3 bg-gray-50 rounded text-left text-sm">
-                  <strong>• 8-inch round</strong><br>
-                  <strong>• Cream cheese frosting</strong><br>
-                  <strong>• Contains walnuts</strong>
-                </div>
-              </div>
+          <!-- Chunky Peanut Butter Granola -->
+          <div class="product-card rounded-lg p-6 text-center">
+            <img src="/images/peanut_butter_granola.jpg" alt="Chunky Peanut Butter Granola" class="mb-4 mx-auto rounded shadow-md">
+            <h3 class="text-xl font-bold mb-1 text-[#8b4513]">Chunky Peanut Butter Granola</h3>
+            <p class="text-gray-500 font-semibold mb-3">Contact for price</p>
+            <div class="border-b border-gray-200 pb-3 mb-3">
+              <p class="text-gray-600 text-sm">Crunchy clusters with oats, seeds, and creamy peanut butter</p>
+            </div>
+            <div class="mt-4 p-3 bg-gray-50 rounded text-left text-sm mb-2">
+              <strong>• No preservatives</strong><br>
+              <strong>• Chunky clusters</strong><br>
+              <strong>• Great for breakfast or snacking</strong>
+            </div>
+            <a href="contact.html" class="add-to-cart-btn inline-block text-center" style="text-decoration:none;">
+              Contact to Order
+            </a>
+          </div>
 
-      <!-- Chocolate Cake 8" -->
-              <div class="product-card rounded-lg p-6 text-center">
-                <img src="/images/chocolate_cake.jpg" alt="Chocolate Cake 8 inch" class="mb-4 mx-auto rounded shadow-md">
-                <h3 class="text-xl font-bold mb-3 text-[#8b4513]">Chocolate Cake 8" - $45</h3>
-                <div class="border-b border-gray-200 pb-3 mb-3">
-                  <p class="text-gray-600 text-sm">Rich and decadent chocolate layers with ganache frosting</p>
-                </div>
-                <p class="price-text">Made to Order</p>
-                <div class="mt-4 p-3 bg-gray-50 rounded text-left text-sm">
-                  <strong>• 8-inch round</strong><br>
-                  <strong>• Rich chocolate frosting</strong><br>
-                  <strong>• Moist crumb texture</strong>
-                </div>
-              </div>
+          <!-- Carrot Cake 8" -->
+          <div class="product-card rounded-lg p-6 text-center">
+            <img src="/images/carrot_cake.jpg" alt="Carrot Cake 8 inch" class="mb-4 mx-auto rounded shadow-md">
+            <h3 class="text-xl font-bold mb-1 text-[#8b4513]">Carrot Cake 8"</h3>
+            <p class="text-gray-500 font-semibold mb-3">$45</p>
+            <div class="border-b border-gray-200 pb-3 mb-3">
+              <p class="text-gray-600 text-sm">Moist and spiced with cinnamon, topped with cream cheese frosting</p>
+            </div>
+            <div class="mt-4 p-3 bg-gray-50 rounded text-left text-sm mb-2">
+              <strong>• 8-inch round</strong><br>
+              <strong>• Cream cheese frosting</strong><br>
+              <strong>• Contains walnuts</strong>
+            </div>
+            <button class="add-to-cart-btn" onclick="addToCart('carrot-cake','Carrot Cake 8&quot;',45,'$45')">
+              + Add to Cart – $45
+            </button>
+          </div>
+
+          <!-- Chocolate Cake 8" -->
+          <div class="product-card rounded-lg p-6 text-center">
+            <img src="/images/chocolate_cake.jpg" alt="Chocolate Cake 8 inch" class="mb-4 mx-auto rounded shadow-md">
+            <h3 class="text-xl font-bold mb-1 text-[#8b4513]">Chocolate Cake 8"</h3>
+            <p class="text-gray-500 font-semibold mb-3">$45</p>
+            <div class="border-b border-gray-200 pb-3 mb-3">
+              <p class="text-gray-600 text-sm">Rich and decadent chocolate layers with ganache frosting</p>
+            </div>
+            <div class="mt-4 p-3 bg-gray-50 rounded text-left text-sm mb-2">
+              <strong>• 8-inch round</strong><br>
+              <strong>• Rich chocolate frosting</strong><br>
+              <strong>• Moist crumb texture</strong>
+            </div>
+            <button class="add-to-cart-btn" onclick="addToCart('choc-cake','Chocolate Cake 8&quot;',45,'$45')">
+              + Add to Cart – $45
+            </button>
+          </div>
+
         </div>
       </div>
     </section>
   </main>
 
-  <!-- Footer -->
   <footer class="text-center py-8 border-t border-gray-200">
     <div class="container mx-auto px-4">
-      <a href="passover_menu.html" class="text-gray-600 hover:text-[#d4734a]">Passover Menu</a>
-        <div class="mt-2">
-        <a href="https://www.instagram.com/getbakedbyerin/" class="text-[#d4734a] hover:underline" target="_blank" rel="noopener noreferrer">
-        📸 Instagram: @getbakedbyerin
-        </a>
+      <div class="flex justify-center space-x-6 mb-3 text-sm">
+        <a href="passover_menu.html" class="text-gray-600 hover:text-[#d4734a]">Passover Menu</a>
+        <a href="https://www.instagram.com/getbakedbyerin/" class="text-[#d4734a] hover:underline" target="_blank" rel="noopener noreferrer">📸 @getbakedbyerin</a>
+      </div>
       <p class="text-gray-500 text-sm">&copy; 2025 Baked by Erin. All rights reserved.</p>
     </div>
-</footer>
+  </footer>
 
+  <script src="cart.js"></script>
   <script>
-    const hamburger = document.querySelector('.hamburger');
-    const navMenu = document.querySelector('.nav-menu');
-
-    hamburger.addEventListener('click', () => {
-      navMenu.classList.toggle('active');
+    document.querySelector('.hamburger').addEventListener('click', () => {
+      document.querySelector('.nav-menu').classList.toggle('active');
     });
-
-    document.querySelectorAll('.nav-link').forEach(link => {
-      link.addEventListener('click', () => {
-        navMenu.classList.remove('active');
-      });
-    });
+    document.querySelectorAll('.nav-link').forEach(l =>
+      l.addEventListener('click', () => document.querySelector('.nav-menu').classList.remove('active'))
+    );
   </script>
-
 </body>
 </html>
