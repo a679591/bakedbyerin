@@ -124,14 +124,22 @@
     </div>
   </footer>
 
-  <script src="cart.js"></script>
-  <script>
-    document.querySelector('.hamburger').addEventListener('click', () => {
-      document.querySelector('.nav-menu').classList.toggle('active');
-    });
-    document.querySelectorAll('.nav-link').forEach(l =>
-      l.addEventListener('click', () => document.querySelector('.nav-menu').classList.remove('active'))
-    );
-  </script>
+<script src="cart.js"></script>
+<script>
+  console.log('script loaded');
+  const hamburger = document.querySelector('.hamburger');
+  const navMenu = document.querySelector('.nav-menu');
+  console.log('hamburger:', hamburger);
+  console.log('navMenu:', navMenu);
+  
+  hamburger.addEventListener('click', () => {
+    console.log('hamburger clicked');
+    navMenu.classList.toggle('active');
+  });
+
+  document.querySelectorAll('.nav-link').forEach(l =>
+    l.addEventListener('click', () => navMenu.classList.remove('active'))
+  );
+</script>
 </body>
 </html>
