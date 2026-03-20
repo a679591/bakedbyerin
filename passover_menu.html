@@ -18,19 +18,16 @@
       background-attachment: fixed;
       color: #2d2d2d;
     }
-
     .product-card {
       border: 1px solid #e5e7eb;
       background: #ffffff;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       transition: all 0.3s ease;
     }
-
     .product-card:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
-
     .section-heading {
       font-size: 2rem;
       font-weight: 700;
@@ -38,12 +35,6 @@
       letter-spacing: 0.05em;
       color: #8b4513;
     }
-
-    .minimal-nav {
-      background: white;
-      border-bottom: 1px solid #e5e7eb;
-    }
-
     .btn-primary {
       background-color: #d4734a;
       color: white;
@@ -52,195 +43,153 @@
       letter-spacing: 0.05em;
       transition: all 0.3s ease;
     }
-
     .btn-primary:hover {
       background-color: #c55a35;
       transform: translateY(-1px);
     }
-
-    .price-text {
-      color: #6b7280;
-      font-size: 0.875rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+    .add-to-cart-btn {
+      background-color: #8b4513;
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      width: 100%;
+      margin-top: 12px;
     }
-/* Nav layout */
-.header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: white;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.nav-logo {
-  font-weight: 700;
-  font-size: 1.25rem;
-  color: #8b4513;
-  text-decoration: none;
-}
-
-.nav-menu {
-  display: flex;
-  gap: 2rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.nav-link {
-  text-decoration: none;
-  color: #2d2d2d;
-  font-weight: 500;
-  transition: color 0.2s;
-}
-
-.nav-link:hover {
-  color: #d4734a;
-}
-
-/* Hamburger — hidden on desktop */
-.hamburger {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  cursor: pointer;
-}
-
-.bar {
-  width: 25px;
-  height: 3px;
-  background-color: #2d2d2d;
-  border-radius: 3px;
-  transition: all 0.3s ease;
-}
-
-/* Mobile styles */
-@media (max-width: 768px) {
-  .hamburger {
-    display: flex;
-  }
-
-  .nav-menu {
-    display: none;
-    flex-direction: column;
-    position: absolute;
-    top: 65px;
-    left: 0;
-    right: 0;
-    background: white;
-    padding: 1rem 2rem;
-    border-bottom: 1px solid #e5e7eb;
-    gap: 1rem;
-  }
-
-  .nav-menu.active {
-    display: flex;
-  }
-}
+    .add-to-cart-btn:hover {
+      background-color: #7a3b10;
+      transform: translateY(-1px);
+    }
+    /* ── Nav ── */
+    .header { position: sticky; top: 0; z-index: 100; background: white; border-bottom: 1px solid #e5e7eb; }
+    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; max-width: 1100px; margin: 0 auto; }
+    .nav-logo { font-weight: 700; font-size: 1.2rem; color: #8b4513; text-decoration: none; }
+    .nav-menu { display: flex; gap: 2rem; list-style: none; margin: 0; padding: 0; align-items: center; }
+    .nav-link { text-decoration: none; color: #2d2d2d; font-weight: 500; transition: color 0.2s; }
+    .nav-link:hover { color: #d4734a; }
+    .cart-link { position: relative; text-decoration: none; font-size: 1.4rem; }
+    #cart-badge { position: absolute; top: -8px; right: -10px; background: #d4734a; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 0.65rem; font-weight: 700; display: none; align-items: center; justify-content: center; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .bar { width: 25px; height: 3px; background: #2d2d2d; border-radius: 3px; transition: all 0.3s ease; }
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+    @media (max-width: 768px) {
+      .hamburger { display: flex; }
+      .nav-menu { display: none; flex-direction: column; position: absolute; top: 65px; left: 0; right: 0; background: white; padding: 1rem 2rem; border-bottom: 1px solid #e5e7eb; gap: 1rem; align-items: flex-start; }
+      .nav-menu.active { display: flex; }
+    }
   </style>
 </head>
 <body class="antialiased">
 
-  <!-- Header -->
-<header class="header">
-  <nav class="navbar">
-    <a href="index.html" class="nav-logo">🧁 BAKED BY ERIN</a>
-    <ul class="nav-menu">
-      <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
-      <li class="nav-item"><a href="menu.html" class="nav-link">Menu</a></li>
-      <li class="nav-item"><a href="passover_menu.html" class="nav-link">Passover Menu</a></li>
-      <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
-      <li class="nav-item"><a href="order.html" class="nav-link">Order Now</a></li>
-    </ul>
-    <div class="hamburger">
-      <span class="bar"></span>
-      <span class="bar"></span>
-      <span class="bar"></span>
-    </div>
-  </nav>
-</header>
+  <header class="header">
+    <nav class="navbar">
+      <a href="index.html" class="nav-logo">🧁 BAKED BY ERIN</a>
+      <ul class="nav-menu">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="menu.html" class="nav-link">Menu</a></li>
+        <li><a href="passover_menu.html" class="nav-link">Passover Menu</a></li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+        <li>
+          <a href="cart.html" class="cart-link" title="View Cart">
+            🛒<span id="cart-badge"></span>
+          </a>
+        </li>
+      </ul>
+      <button class="hamburger" aria-label="Open menu">
+        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+      </button>
+    </nav>
+  </header>
+
   <main>
-    <!-- Menu Section -->
     <section id="menu" class="py-16 px-4">
       <div class="container mx-auto">
-        <h2 class="section-heading text-center mb-12">Our Menu</h2>
-       <div class="space-y-12 max-w-3xl mx-auto px-4">
-      <!-- Coconut Macaroons -->
-              <div class="product-card rounded-lg p-6 text-center">
-                <img src="/images/macaroons_plain.jpeg" alt="Coconut Macaroons" class="mb-4 mx-auto rounded shadow-md">
-                <h3 class="text-xl font-bold mb-3 text-[#8b4513]">Coconut Macaroons - Box $20</h3>
-                <div class="border-b border-gray-200 pb-3 mb-3">
-                  <p class="text-gray-600 text-sm">A traditional coconut macaroon for Passover</p>
-                </div>
-              </div>
+        <h2 class="section-heading text-center mb-4">Passover Menu</h2>
+        <p class="text-center text-gray-500 mb-12">Traditional Passover treats made with love</p>
+        <div class="space-y-12 max-w-3xl mx-auto px-4">
 
-      <!-- Chocolate Dipped Coconut Macaroons -->
-              <div class="product-card rounded-lg p-6 text-center">
-                <img src="/images/macaroons_chocolate.jpeg" alt="Chocolate Dipped Coconut Macaroons" class="mb-4 mx-auto rounded shadow-md">
-                <h3 class="text-xl font-bold mb-3 text-[#8b4513]">Chocolate Dipped Coconut Macaroons - Box $20</h3>
-                <div class="border-b border-gray-200 pb-3 mb-3">
-                  <p class="text-gray-600 text-sm">A sweet treat for Passover</p>
-                </div>
-              </div>
+          <!-- Coconut Macaroons -->
+          <div class="product-card rounded-lg p-6 text-center">
+            <img src="/images/macaroons_plain.jpeg" alt="Coconut Macaroons" class="mb-4 mx-auto rounded shadow-md">
+            <h3 class="text-xl font-bold mb-1 text-[#8b4513]">Coconut Macaroons</h3>
+            <p class="text-gray-500 font-semibold mb-3">Box – $20</p>
+            <div class="border-b border-gray-200 pb-3 mb-3">
+              <p class="text-gray-600 text-sm">A traditional coconut macaroon for Passover</p>
+            </div>
+            <button class="add-to-cart-btn" onclick="addToCart('macaroons','Coconut Macaroons (Box)',20,'$20')">
+              + Add to Cart – $20
+            </button>
+          </div>
 
-      <!-- Matzah Bark -->
-              <div class="product-card rounded-lg p-6 text-center">
-                <img src="/images/matzah_bark.jpeg" alt="Matzah Bark" class="mb-4 mx-auto rounded shadow-md">
-                <h3 class="text-xl font-bold mb-3 text-[#8b4513]">Matzah Bark - Box $20</h3>
-                <div class="border-b border-gray-200 pb-3 mb-3">
-                  <p class="text-gray-600 text-sm">The candy bar for Passover</p>
-                </div>
-              </div>
+          <!-- Chocolate Dipped Coconut Macaroons -->
+          <div class="product-card rounded-lg p-6 text-center">
+            <img src="/images/macaroons_chocolate.jpeg" alt="Chocolate Dipped Coconut Macaroons" class="mb-4 mx-auto rounded shadow-md">
+            <h3 class="text-xl font-bold mb-1 text-[#8b4513]">Chocolate Dipped Coconut Macaroons</h3>
+            <p class="text-gray-500 font-semibold mb-3">Box – $20</p>
+            <div class="border-b border-gray-200 pb-3 mb-3">
+              <p class="text-gray-600 text-sm">A sweet treat for Passover</p>
+            </div>
+            <button class="add-to-cart-btn" onclick="addToCart('choc-macaroons','Chocolate Dipped Coconut Macaroons (Box)',20,'$20')">
+              + Add to Cart – $20
+            </button>
+          </div>
 
-      <!-- Flourless Brownies -->
-              <div class="product-card rounded-lg p-6 text-center">
-                <img src="/images/passover_brownies.jpeg" alt="Flourless Brownies" class="mb-4 mx-auto rounded shadow-md">
-                <h3 class="text-xl font-bold mb-3 text-[#8b4513]">Flourless Brownies - Box $20</h3>
-                <div class="border-b border-gray-200 pb-3 mb-3">
-                  <p class="text-gray-600 text-sm">Fudgie and gooey flourless brownies </p>
-                </div>
-              </div>
+          <!-- Matzah Bark -->
+          <div class="product-card rounded-lg p-6 text-center">
+            <img src="/images/matzah_bark.jpeg" alt="Matzah Bark" class="mb-4 mx-auto rounded shadow-md">
+            <h3 class="text-xl font-bold mb-1 text-[#8b4513]">Matzah Bark</h3>
+            <p class="text-gray-500 font-semibold mb-3">Box – $20</p>
+            <div class="border-b border-gray-200 pb-3 mb-3">
+              <p class="text-gray-600 text-sm">The candy bar for Passover</p>
+            </div>
+            <button class="add-to-cart-btn" onclick="addToCart('matzah-bark','Matzah Bark (Box)',20,'$20')">
+              + Add to Cart – $20
+            </button>
+          </div>
+
+          <!-- Flourless Brownies -->
+          <div class="product-card rounded-lg p-6 text-center">
+            <img src="/images/passover_brownies.jpeg" alt="Flourless Brownies" class="mb-4 mx-auto rounded shadow-md">
+            <h3 class="text-xl font-bold mb-1 text-[#8b4513]">Flourless Brownies</h3>
+            <p class="text-gray-500 font-semibold mb-3">Box – $20</p>
+            <div class="border-b border-gray-200 pb-3 mb-3">
+              <p class="text-gray-600 text-sm">Fudgie and gooey flourless brownies</p>
+            </div>
+            <button class="add-to-cart-btn" onclick="addToCart('flourless-brownies','Flourless Brownies (Box)',20,'$20')">
+              + Add to Cart – $20
+            </button>
+          </div>
+
         </div>
       </div>
     </section>
   </main>
 
-  <!-- Footer -->
   <footer class="text-center py-8 border-t border-gray-200">
     <div class="container mx-auto px-4">
-      <a href="menu.html" class="text-gray-600 hover:text-[#d4734a]">Menu</a>
-        <div class="mt-2">
-        <a href="https://www.instagram.com/getbakedbyerin/" class="text-[#d4734a] hover:underline" target="_blank" rel="noopener noreferrer">
-        📸 Instagram: @getbakedbyerin
-        </a>
+      <div class="flex justify-center space-x-6 mb-3 text-sm">
+        <a href="menu.html" class="text-gray-600 hover:text-[#d4734a]">Regular Menu</a>
+        <a href="https://www.instagram.com/getbakedbyerin/" class="text-[#d4734a] hover:underline" target="_blank" rel="noopener noreferrer">📸 @getbakedbyerin</a>
+      </div>
       <p class="text-gray-500 text-sm">&copy; 2025 Baked by Erin. All rights reserved.</p>
     </div>
   </footer>
 
+  <script src="cart.js"></script>
   <script>
-    const hamburger = document.querySelector('.hamburger');
-    const navMenu = document.querySelector('.nav-menu');
-
-    hamburger.addEventListener('click', () => {
-      navMenu.classList.toggle('active');
+    document.querySelector('.hamburger').addEventListener('click', () => {
+      document.querySelector('.nav-menu').classList.toggle('active');
     });
-
-    document.querySelectorAll('.nav-link').forEach(link => {
-      link.addEventListener('click', () => {
-        navMenu.classList.remove('active');
-      });
-    });
+    document.querySelectorAll('.nav-link').forEach(l =>
+      l.addEventListener('click', () => document.querySelector('.nav-menu').classList.remove('active'))
+    );
   </script>
-
 </body>
 </html>
