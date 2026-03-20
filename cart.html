@@ -86,48 +86,33 @@
       font-weight: 600;
       display: none;
     }
-    /* ── Nav ── */
-    .header { position: sticky; top: 0; z-index: 100; background: white; border-bottom: 1px solid #e5e7eb; }
-    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; max-width: 1100px; margin: 0 auto; }
-    .nav-logo { font-weight: 700; font-size: 1.2rem; color: #8b4513; text-decoration: none; }
-    .nav-menu { display: flex; gap: 2rem; list-style: none; margin: 0; padding: 0; align-items: center; }
-    .nav-link { text-decoration: none; color: #2d2d2d; font-weight: 500; transition: color 0.2s; }
-    .nav-link:hover { color: #d4734a; }
-    .cart-link { position: relative; text-decoration: none; font-size: 1.4rem; }
-    #cart-badge { position: absolute; top: -8px; right: -10px; background: #d4734a; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 0.65rem; font-weight: 700; display: none; align-items: center; justify-content: center; }
-    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
-    .bar { width: 25px; height: 3px; background: #2d2d2d; border-radius: 3px; transition: all 0.3s ease; }
-    @keyframes toastIn {
-      from { opacity: 0; transform: translateX(-50%) translateY(10px); }
-      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
-    }
-    @media (max-width: 768px) {
-      .hamburger { display: flex; }
-      .nav-menu { display: none; flex-direction: column; position: absolute; top: 65px; left: 0; right: 0; background: white; padding: 1rem 2rem; border-bottom: 1px solid #e5e7eb; gap: 1rem; align-items: flex-start; }
-      .nav-menu.active { display: flex; }
-    }
   </style>
 </head>
 <body class="antialiased">
 
-  <header class="header">
-    <nav class="navbar">
-      <a href="index.html" class="nav-logo">🧁 BAKED BY ERIN</a>
-      <ul class="nav-menu">
-        <li><a href="index.html" class="nav-link">Home</a></li>
-        <li><a href="menu.html" class="nav-link">Menu</a></li>
-        <li><a href="passover_menu.html" class="nav-link">Passover Menu</a></li>
-        <li><a href="contact.html" class="nav-link">Contact</a></li>
+  <!-- Header -->
+  <header style="position:sticky;top:0;z-index:100;background:white;border-bottom:1px solid #e5e7eb;">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:1rem 2rem;max-width:1100px;margin:0 auto;">
+      <a href="index.html" style="font-weight:700;font-size:1.2rem;color:#8b4513;text-decoration:none;">🧁 BAKED BY ERIN</a>
+
+      <ul id="nav-menu" style="display:flex;gap:2rem;list-style:none;margin:0;padding:0;align-items:center;">
+        <li><a href="index.html" style="text-decoration:none;color:#2d2d2d;font-weight:500;">Home</a></li>
+        <li><a href="menu.html" style="text-decoration:none;color:#2d2d2d;font-weight:500;">Menu</a></li>
+        <li><a href="passover_menu.html" style="text-decoration:none;color:#2d2d2d;font-weight:500;">Passover Menu</a></li>
+        <li><a href="contact.html" style="text-decoration:none;color:#2d2d2d;font-weight:500;">Contact</a></li>
         <li>
-          <a href="cart.html" class="cart-link" title="View Cart">
-            🛒<span id="cart-badge"></span>
+          <a href="cart.html" style="text-decoration:none;font-size:1.4rem;position:relative;">
+            🛒<span id="cart-badge" style="position:absolute;top:-8px;right:-10px;background:#d4734a;color:white;border-radius:50%;width:18px;height:18px;font-size:0.65rem;font-weight:700;display:none;align-items:center;justify-content:center;"></span>
           </a>
         </li>
       </ul>
-      <button class="hamburger" aria-label="Open menu">
-        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+
+      <button id="hamburger-btn" style="display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;" aria-label="Open menu">
+        <span style="width:25px;height:3px;background:#2d2d2d;border-radius:3px;display:block;"></span>
+        <span style="width:25px;height:3px;background:#2d2d2d;border-radius:3px;display:block;"></span>
+        <span style="width:25px;height:3px;background:#2d2d2d;border-radius:3px;display:block;"></span>
       </button>
-    </nav>
+    </div>
   </header>
 
   <main class="py-16 px-4">
@@ -147,8 +132,8 @@
 
         <!-- Order total -->
         <div class="card p-4 mb-8 flex justify-between items-center">
-          <span class="font-700 text-lg font-bold">Estimated Total</span>
-          <span id="cart-total" class="text-2xl font-900 text-[#8b4513] font-bold"></span>
+          <span class="text-lg font-bold">Estimated Total</span>
+          <span id="cart-total" class="text-2xl font-bold text-[#8b4513]"></span>
         </div>
 
         <!-- Checkout form -->
@@ -163,11 +148,10 @@
             1. Go to https://formspree.io and create a free account
             2. Create a new form and copy your form ID
             3. Replace YOUR_FORM_ID below with your actual form ID
-            Example: action="https://formspree.io/f/xyknvwqq"
+            Example: action="https://formspree.io/f/abcd1234"
           -->
           <form id="checkout-form" action="https://formspree.io/f/xyknvwqq" method="POST">
 
-            <!-- Hidden field: order summary injected by JS -->
             <input type="hidden" name="Order Summary" id="order-summary-field">
 
             <div class="space-y-5">
@@ -219,15 +203,54 @@
 
   <script src="cart.js"></script>
   <script>
-    // Nav
-    document.querySelector('.hamburger').addEventListener('click', () => {
-      document.querySelector('.nav-menu').classList.toggle('active');
-    });
-    document.querySelectorAll('.nav-link').forEach(l =>
-      l.addEventListener('click', () => document.querySelector('.nav-menu').classList.remove('active'))
-    );
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    const navMenu = document.getElementById('nav-menu');
+    let menuOpen = false;
 
-    // ── Render cart ────────────────────────────────────────────
+    function setMobileLayout() {
+      if (window.innerWidth <= 768) {
+        hamburgerBtn.style.display = 'flex';
+        if (!menuOpen) navMenu.style.display = 'none';
+      } else {
+        hamburgerBtn.style.display = 'none';
+        navMenu.style.display = 'flex';
+        navMenu.style.flexDirection = 'row';
+        navMenu.style.position = 'static';
+        menuOpen = false;
+      }
+    }
+
+    hamburgerBtn.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      if (menuOpen) {
+        navMenu.style.display = 'flex';
+        navMenu.style.flexDirection = 'column';
+        navMenu.style.position = 'absolute';
+        navMenu.style.top = '65px';
+        navMenu.style.left = '0';
+        navMenu.style.right = '0';
+        navMenu.style.background = 'white';
+        navMenu.style.padding = '1rem 2rem';
+        navMenu.style.borderBottom = '1px solid #e5e7eb';
+        navMenu.style.gap = '1rem';
+        navMenu.style.alignItems = 'flex-start';
+        navMenu.style.zIndex = '99';
+      } else {
+        navMenu.style.display = 'none';
+      }
+    });
+
+    navMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        menuOpen = false;
+        if (window.innerWidth <= 768) navMenu.style.display = 'none';
+      });
+    });
+
+    window.addEventListener('resize', setMobileLayout);
+    setMobileLayout();
+
+    // ── Render cart ─────────────────────────────────────────────
     function renderCart() {
       const cart = getCart();
       const itemsEl = document.getElementById('cart-items');
@@ -265,7 +288,6 @@
       const total = cartTotal();
       totalEl.textContent = `$${total.toFixed(0)}`;
 
-      // Build order summary for Formspree hidden field
       const summary = cart.map(i => `${i.name} x${i.qty} = $${(i.price * i.qty).toFixed(0)}`).join('\n') +
         `\n\nTotal: $${total.toFixed(0)}`;
       document.getElementById('order-summary-field').value = summary;
@@ -281,7 +303,7 @@
       renderCart();
     }
 
-    // ── Form submission ────────────────────────────────────────
+    // ── Form submission ──────────────────────────────────────────
     document.getElementById('checkout-form').addEventListener('submit', async function(e) {
       e.preventDefault();
       const form = e.target;
