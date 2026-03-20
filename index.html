@@ -14,14 +14,12 @@
       background-color: #ffffff;
       color: #2d2d2d;
     }
-
     .hero-text {
       font-size: 4.5rem;
       font-weight: 900;
       line-height: 1.1;
       letter-spacing: -0.02em;
     }
-
     .section-heading {
       font-size: 2rem;
       font-weight: 700;
@@ -29,12 +27,6 @@
       letter-spacing: 0.05em;
       color: #8b4513;
     }
-
-    .minimal-nav {
-      background: white;
-      border-bottom: 1px solid #e5e7eb;
-    }
-
     .btn-primary {
       background-color: #d4734a;
       color: white;
@@ -43,124 +35,56 @@
       letter-spacing: 0.05em;
       transition: all 0.3s ease;
     }
-
     .btn-primary:hover {
       background-color: #c55a35;
       transform: translateY(-1px);
     }
-
-    @media (max-width: 768px) {
-      .hero-text {
-        font-size: 3rem;
-      }
+    /* ── Nav ── */
+    .header { position: sticky; top: 0; z-index: 100; background: white; border-bottom: 1px solid #e5e7eb; }
+    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; max-width: 1100px; margin: 0 auto; }
+    .nav-logo { font-weight: 700; font-size: 1.2rem; color: #8b4513; text-decoration: none; }
+    .nav-menu { display: flex; gap: 2rem; list-style: none; margin: 0; padding: 0; align-items: center; }
+    .nav-link { text-decoration: none; color: #2d2d2d; font-weight: 500; transition: color 0.2s; }
+    .nav-link:hover { color: #d4734a; }
+    .cart-link { position: relative; text-decoration: none; font-size: 1.4rem; }
+    #cart-badge { position: absolute; top: -8px; right: -10px; background: #d4734a; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 0.65rem; font-weight: 700; display: none; align-items: center; justify-content: center; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .bar { width: 25px; height: 3px; background: #2d2d2d; border-radius: 3px; transition: all 0.3s ease; }
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
     }
-/* Nav layout */
-.header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: white;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.nav-logo {
-  font-weight: 700;
-  font-size: 1.25rem;
-  color: #8b4513;
-  text-decoration: none;
-}
-
-.nav-menu {
-  display: flex;
-  gap: 2rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.nav-link {
-  text-decoration: none;
-  color: #2d2d2d;
-  font-weight: 500;
-  transition: color 0.2s;
-}
-
-.nav-link:hover {
-  color: #d4734a;
-}
-
-/* Hamburger — hidden on desktop */
-.hamburger {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  cursor: pointer;
-}
-
-.bar {
-  width: 25px;
-  height: 3px;
-  background-color: #2d2d2d;
-  border-radius: 3px;
-  transition: all 0.3s ease;
-}
-
-/* Mobile styles */
-@media (max-width: 768px) {
-  .hamburger {
-    display: flex;
-  }
-
-  .nav-menu {
-    display: none;
-    flex-direction: column;
-    position: absolute;
-    top: 65px;
-    left: 0;
-    right: 0;
-    background: white;
-    padding: 1rem 2rem;
-    border-bottom: 1px solid #e5e7eb;
-    gap: 1rem;
-  }
-
-  .nav-menu.active {
-    display: flex;
-  }
-}
+    @media (max-width: 768px) {
+      .hero-text { font-size: 3rem; }
+      .hamburger { display: flex; }
+      .nav-menu { display: none; flex-direction: column; position: absolute; top: 65px; left: 0; right: 0; background: white; padding: 1rem 2rem; border-bottom: 1px solid #e5e7eb; gap: 1rem; align-items: flex-start; }
+      .nav-menu.active { display: flex; }
+    }
   </style>
 </head>
 <body class="antialiased">
 
-  <!-- Header -->
   <header class="header">
     <nav class="navbar">
-      <a href="#" class="nav-logo">🧁 BAKED BY ERIN</a>
+      <a href="index.html" class="nav-logo">🧁 BAKED BY ERIN</a>
       <ul class="nav-menu">
-        <li class="nav-item"><a href="index.html#about" class="nav-link">About</a></li>
-        <li class="nav-item"><a href="menu.html" class="nav-link">Menu</a></li>
-        <li class="nav-item"><a href="passover_menu.html" class="nav-link">Passover Menu</a></li>
-        <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+        <li><a href="index.html#about" class="nav-link">About</a></li>
+        <li><a href="menu.html" class="nav-link">Menu</a></li>
+        <li><a href="passover_menu.html" class="nav-link">Passover Menu</a></li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+        <li>
+          <a href="cart.html" class="cart-link" title="View Cart">
+            🛒<span id="cart-badge"></span>
+          </a>
+        </li>
       </ul>
-      <div class="hamburger">
-        <span class="bar"></span>
-        <span class="bar"></span>
-        <span class="bar"></span>
-      </div>
+      <button class="hamburger" aria-label="Open menu">
+        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+      </button>
     </nav>
-  </header>   
+  </header>
 
   <main>
-    <!-- Hero Section -->
     <section class="text-center py-16 md:py-24 px-4">
       <div class="container mx-auto max-w-4xl">
         <h1 class="hero-text text-[#8b4513] mb-6">FRESHLY BAKED TREATS</h1>
@@ -171,7 +95,6 @@
       </div>
     </section>
 
-    <!-- About Section -->
     <section id="about" class="py-16 px-4 bg-gray-50">
       <div class="container mx-auto max-w-4xl text-center">
         <h2 class="section-heading mb-8">About Erin</h2>
@@ -180,8 +103,8 @@
             <span class="text-5xl">👩‍🍳</span>
           </div>
           <p class="text-lg text-gray-600 leading-relaxed">
-            Hi, I’m Erin—a home baker obsessed with creating mouthwatering treats for every occasion.
-            Whether you’re craving classic cakes or artisanal breads, I pour my heart into every batch.
+            Hi, I'm Erin—a home baker obsessed with creating mouthwatering treats for every occasion.
+            Whether you're craving classic cakes or artisanal breads, I pour my heart into every batch.
             Each recipe is crafted with premium ingredients and years of passion for the perfect bite.
           </p>
         </div>
@@ -189,40 +112,31 @@
     </section>
   </main>
 
-  <!-- Footer -->
   <footer class="text-center py-8 border-t border-gray-200">
     <div class="container mx-auto px-4">
       <div class="flex justify-center space-x-8 mb-4 text-sm">
         <a href="index.html#about" class="text-gray-600 hover:text-[#d4734a]">About</a>
         <a href="menu.html" class="text-gray-600 hover:text-[#d4734a]">Menu</a>
         <a href="contact.html" class="text-gray-600 hover:text-[#d4734a]">Contact</a>
-        <a href="https://instagram.com/bakedbyerin" target="_blank" class="text-gray-600 hover:text-[#d4734a]">Instagram</a>
+        <a href="https://instagram.com/getbakedbyerin" target="_blank" class="text-gray-600 hover:text-[#d4734a]">Instagram</a>
       </div>
       <p class="text-gray-500 text-sm">&copy; 2025 Baked by Erin. All rights reserved.</p>
     </div>
   </footer>
 
+  <script src="cart.js"></script>
   <script>
+    document.querySelector('.hamburger').addEventListener('click', () => {
+      document.querySelector('.nav-menu').classList.toggle('active');
+    });
+    document.querySelectorAll('.nav-link').forEach(l =>
+      l.addEventListener('click', () => document.querySelector('.nav-menu').classList.remove('active'))
+    );
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', e => {
         e.preventDefault();
         const target = document.querySelector(anchor.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      });
-    });
-    const hamburger = document.querySelector('.hamburger');
-    const navMenu = document.querySelector('.nav-menu');
-
-    hamburger.addEventListener('click', () => {
-      navMenu.classList.toggle('active');
-    });
-
-    // Close menu when a link is clicked
-    document.querySelectorAll('.nav-link').forEach(link => {
-      link.addEventListener('click', () => {
-        navMenu.classList.remove('active');
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
   </script>
