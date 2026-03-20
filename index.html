@@ -68,7 +68,7 @@
     <nav class="navbar">
       <a href="index.html" class="nav-logo">🧁 BAKED BY ERIN</a>
       <ul class="nav-menu">
-        <li><a href="index.html#about" class="nav-link">About</a></li>
+        <li><a href="#about" class="nav-link">About</a></li>
         <li><a href="menu.html" class="nav-link">Menu</a></li>
         <li><a href="passover_menu.html" class="nav-link">Passover Menu</a></li>
         <li><a href="contact.html" class="nav-link">Contact</a></li>
@@ -132,13 +132,6 @@
     document.querySelectorAll('.nav-link').forEach(l =>
       l.addEventListener('click', () => document.querySelector('.nav-menu').classList.remove('active'))
     );
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', e => {
-        e.preventDefault();
-        const target = document.querySelector(anchor.getAttribute('href'));
-        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-    });
   </script>
 </body>
 </html>
