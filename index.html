@@ -14,12 +14,14 @@
       background-color: #ffffff;
       color: #2d2d2d;
     }
+
     .hero-text {
       font-size: 4.5rem;
       font-weight: 900;
       line-height: 1.1;
       letter-spacing: -0.02em;
     }
+
     .section-heading {
       font-size: 2rem;
       font-weight: 700;
@@ -27,6 +29,7 @@
       letter-spacing: 0.05em;
       color: #8b4513;
     }
+
     .btn-primary {
       background-color: #d4734a;
       color: white;
@@ -35,56 +38,46 @@
       letter-spacing: 0.05em;
       transition: all 0.3s ease;
     }
+
     .btn-primary:hover {
       background-color: #c55a35;
       transform: translateY(-1px);
     }
-    /* ── Nav ── */
-    .header { position: sticky; top: 0; z-index: 100; background: white; border-bottom: 1px solid #e5e7eb; }
-    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; max-width: 1100px; margin: 0 auto; }
-    .nav-logo { font-weight: 700; font-size: 1.2rem; color: #8b4513; text-decoration: none; }
-    .nav-menu { display: flex; gap: 2rem; list-style: none; margin: 0; padding: 0; align-items: center; }
-    .nav-link { text-decoration: none; color: #2d2d2d; font-weight: 500; transition: color 0.2s; }
-    .nav-link:hover { color: #d4734a; }
-    .cart-link { position: relative; text-decoration: none; font-size: 1.4rem; }
-    #cart-badge { position: absolute; top: -8px; right: -10px; background: #d4734a; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 0.65rem; font-weight: 700; display: none; align-items: center; justify-content: center; }
-    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
-    .bar { width: 25px; height: 3px; background: #2d2d2d; border-radius: 3px; transition: all 0.3s ease; }
-    @keyframes toastIn {
-      from { opacity: 0; transform: translateX(-50%) translateY(10px); }
-      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
-    }
+
     @media (max-width: 768px) {
       .hero-text { font-size: 3rem; }
-      .hamburger { display: flex !important; }
-      .nav-menu { display: none !important; flex-direction: column !important; position: absolute !important; top: 65px !important; left: 0 !important; right: 0 !important; background: white !important; padding: 1rem 2rem !important; border-bottom: 1px solid #e5e7eb !important; gap: 1rem !important; align-items: flex-start !important; }
-      .nav-menu.active { display: flex !important; }
     }
   </style>
 </head>
 <body class="antialiased">
 
-  <header class="header">
-    <nav class="navbar">
-      <a href="index.html" class="nav-logo">🧁 BAKED BY ERIN</a>
-      <ul class="nav-menu">
-        <li><a href="#about" class="nav-link">About</a></li>
-        <li><a href="menu.html" class="nav-link">Menu</a></li>
-        <li><a href="passover_menu.html" class="nav-link">Passover Menu</a></li>
-        <li><a href="contact.html" class="nav-link">Contact</a></li>
+  <!-- Header - fully inline styled to avoid Tailwind conflicts -->
+  <header style="position:sticky;top:0;z-index:100;background:white;border-bottom:1px solid #e5e7eb;">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:1rem 2rem;max-width:1100px;margin:0 auto;">
+      <a href="index.html" style="font-weight:700;font-size:1.2rem;color:#8b4513;text-decoration:none;">🧁 BAKED BY ERIN</a>
+
+      <ul id="nav-menu" style="display:flex;gap:2rem;list-style:none;margin:0;padding:0;align-items:center;">
+        <li><a href="#about" style="text-decoration:none;color:#2d2d2d;font-weight:500;">About</a></li>
+        <li><a href="menu.html" style="text-decoration:none;color:#2d2d2d;font-weight:500;">Menu</a></li>
+        <li><a href="passover_menu.html" style="text-decoration:none;color:#2d2d2d;font-weight:500;">Passover Menu</a></li>
+        <li><a href="contact.html" style="text-decoration:none;color:#2d2d2d;font-weight:500;">Contact</a></li>
         <li>
-          <a href="cart.html" class="cart-link" title="View Cart">
-            🛒<span id="cart-badge"></span>
+          <a href="cart.html" style="text-decoration:none;font-size:1.4rem;position:relative;display:inline-block;">
+            🛒<span id="cart-badge" style="position:absolute;top:-8px;right:-10px;background:#d4734a;color:white;border-radius:50%;width:18px;height:18px;font-size:0.65rem;font-weight:700;display:none;align-items:center;justify-content:center;"></span>
           </a>
         </li>
       </ul>
-      <button class="hamburger" aria-label="Open menu">
-        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+
+      <button id="hamburger-btn" style="display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;" aria-label="Open menu">
+        <span style="width:25px;height:3px;background:#2d2d2d;border-radius:3px;display:block;"></span>
+        <span style="width:25px;height:3px;background:#2d2d2d;border-radius:3px;display:block;"></span>
+        <span style="width:25px;height:3px;background:#2d2d2d;border-radius:3px;display:block;"></span>
       </button>
-    </nav>
+    </div>
   </header>
 
   <main>
+    <!-- Hero Section -->
     <section class="text-center py-16 md:py-24 px-4">
       <div class="container mx-auto max-w-4xl">
         <h1 class="hero-text text-[#8b4513] mb-6">FRESHLY BAKED TREATS</h1>
@@ -95,6 +88,7 @@
       </div>
     </section>
 
+    <!-- About Section -->
     <section id="about" class="py-16 px-4 bg-gray-50">
       <div class="container mx-auto max-w-4xl text-center">
         <h2 class="section-heading mb-8">About Erin</h2>
@@ -112,10 +106,11 @@
     </section>
   </main>
 
+  <!-- Footer -->
   <footer class="text-center py-8 border-t border-gray-200">
     <div class="container mx-auto px-4">
       <div class="flex justify-center space-x-8 mb-4 text-sm">
-        <a href="index.html#about" class="text-gray-600 hover:text-[#d4734a]">About</a>
+        <a href="#about" class="text-gray-600 hover:text-[#d4734a]">About</a>
         <a href="menu.html" class="text-gray-600 hover:text-[#d4734a]">Menu</a>
         <a href="contact.html" class="text-gray-600 hover:text-[#d4734a]">Contact</a>
         <a href="https://instagram.com/getbakedbyerin" target="_blank" class="text-gray-600 hover:text-[#d4734a]">Instagram</a>
@@ -124,22 +119,55 @@
     </div>
   </footer>
 
-<script src="cart.js"></script>
-<script>
-  console.log('script loaded');
-  const hamburger = document.querySelector('.hamburger');
-  const navMenu = document.querySelector('.nav-menu');
-  console.log('hamburger:', hamburger);
-  console.log('navMenu:', navMenu);
-  
-  hamburger.addEventListener('click', () => {
-    console.log('hamburger clicked');
-    navMenu.classList.toggle('active');
-  });
+  <script src="cart.js"></script>
+  <script>
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    const navMenu = document.getElementById('nav-menu');
+    let menuOpen = false;
 
-  document.querySelectorAll('.nav-link').forEach(l =>
-    l.addEventListener('click', () => navMenu.classList.remove('active'))
-  );
-</script>
+    function setMobileLayout() {
+      if (window.innerWidth <= 768) {
+        hamburgerBtn.style.display = 'flex';
+        if (!menuOpen) {
+          navMenu.style.display = 'none';
+        }
+      } else {
+        hamburgerBtn.style.display = 'none';
+        navMenu.style.display = 'flex';
+        navMenu.style.flexDirection = 'row';
+        navMenu.style.position = 'static';
+      }
+    }
+
+    hamburgerBtn.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      if (menuOpen) {
+        navMenu.style.display = 'flex';
+        navMenu.style.flexDirection = 'column';
+        navMenu.style.position = 'absolute';
+        navMenu.style.top = '65px';
+        navMenu.style.left = '0';
+        navMenu.style.right = '0';
+        navMenu.style.background = 'white';
+        navMenu.style.padding = '1rem 2rem';
+        navMenu.style.borderBottom = '1px solid #e5e7eb';
+        navMenu.style.gap = '1rem';
+        navMenu.style.alignItems = 'flex-start';
+        navMenu.style.zIndex = '99';
+      } else {
+        navMenu.style.display = 'none';
+      }
+    });
+
+    navMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        menuOpen = false;
+        navMenu.style.display = 'none';
+      });
+    });
+
+    window.addEventListener('resize', setMobileLayout);
+    setMobileLayout();
+  </script>
 </body>
 </html>
