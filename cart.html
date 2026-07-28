@@ -317,6 +317,7 @@
         });
         if (res.ok) {
           document.getElementById('success-banner').style.display = 'block';
+          alert('Thank you for your order!');
           form.reset();
           localStorage.removeItem('bakedByErinCart');
           updateCartBadge();
@@ -326,7 +327,7 @@
           alert('Something went wrong. Please try again or contact Erin directly.');
         }
       } catch {
-        alert('Could not submit order. Please email Erin directly at erinjillianrodriguez@gmail.com');
+        alert('Could not submit order. Please email Erin directly at getbakedbyerin@gmail.com');
       }
     });
 
