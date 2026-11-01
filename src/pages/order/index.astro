@@ -57,8 +57,8 @@ const FORMSPREE_URL = "https://formspree.io/f/xyknvwqq";
 			<label>Phone *
 				<input name="customer_phone" type="tel" required autocomplete="tel" />
 			</label>
-			<label>Email
-				<input name="customer_email" type="email" autocomplete="email" />
+			<label>Email *
+				<input name="customer_email" type="email" required autocomplete="email" />
 			</label>
 
 			<fieldset class="choice">
@@ -241,6 +241,7 @@ const FORMSPREE_URL = "https://formspree.io/f/xyknvwqq";
 			var missing = [];
 			if (!String(fd.get("customer_name") || "").trim()) missing.push("name");
 			if (!String(fd.get("customer_phone") || "").trim()) missing.push("phone");
+			if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(fd.get("customer_email") || "").trim())) missing.push("email");
 			if (!fd.get("pickup_date")) missing.push("date");
 			else if (String(fd.get("pickup_date")) < minDate) {
 				errEl.textContent = "Orders need at least " + LEAD_DAYS + " days' notice. Please choose " + dateInput.min.slice(5).replace("-", "/") + " or later.";
@@ -290,8 +291,7 @@ const FORMSPREE_URL = "https://formspree.io/f/xyknvwqq";
 							"Order Ref": data.id,
 							Name: o.customer_name,
 							Phone: o.customer_phone,
-							Email: o.customer_email || "",
-							_replyto: o.customer_email || undefined,
+							email: o.customer_email,
 							"Pickup or Delivery": o.fulfillment,
 							"Delivery Address": o.delivery_address || "",
 							"Requested Date": o.requested_date,

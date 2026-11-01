@@ -44,8 +44,8 @@ async function notifyErin(order: Record<string, any>, id: string, origin: string
 				"Order Ref": id,
 				Name: order.customer_name,
 				Phone: order.customer_phone,
-				Email: order.customer_email || "",
-				...(order.customer_email ? { _replyto: order.customer_email } : {}),
+				// Erin's Formspree form requires a field named exactly "email" (also used as the reply-to).
+				email: order.customer_email,
 				"Pickup or Delivery": order.fulfillment,
 				"Delivery Address": order.delivery_address || "",
 				"Requested Date": order.requested_date,
@@ -99,6 +99,8 @@ export const POST: APIRoute = async ({ request }) => {
 
 	if (!customer_name) return json({ ok: false, error: "Your name is required." }, 400);
 	if (!customer_phone) return json({ ok: false, error: "A phone number is required so Erin can confirm your order." }, 400);
+	if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer_email))
+		return json({ ok: false, error: "A valid email address is required so Erin can confirm your order." }, 400);
 	if (!pickup_date) return json({ ok: false, error: "Please choose a date." }, 400);
 	// Minimum notice, counted from today's date in Miami.
 	const todayMiami = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York" }).format(new Date());
