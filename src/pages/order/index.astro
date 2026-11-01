@@ -26,7 +26,7 @@ const minGroups = MIN_GROUPS.map((g) => ({ key: g.key, min: g.min, label: g.labe
 const DELIVERY_FEE = 10;
 // Orders need this many days' notice (order on Nov 1 → earliest Nov 4). Keep in sync with api/orders.ts.
 const LEAD_DAYS = 3;
-// Erin's existing Formspree form, so order emails keep arriving the way they do today.
+// Erin's Formspree form. The server emails each order; the browser only retries if the server couldn't.
 const FORMSPREE_URL = "https://formspree.io/f/xyknvwqq";
 ---
 
@@ -276,8 +276,8 @@ const FORMSPREE_URL = "https://formspree.io/f/xyknvwqq";
 				var data = await res.json().catch(function () { return {}; });
 				if (!res.ok || !data.ok) throw new Error(data.error || "Could not place the order. Please try again.");
 
-				// Email Erin through her existing Formspree form (best effort — the order is already saved).
-				try {
+				// The server already emailed Erin. Only if that failed, try once from the browser.
+				if (!data.notified) try {
 					var o = data.order;
 					var ctrl = new AbortController();
 					setTimeout(function () { ctrl.abort(); }, 5000);
