@@ -1,0 +1,111 @@
+---
+import { getEmDashCollection, getTaxonomyTermsWithCacheHint } from "emdash";
+import Base from "../../layouts/Base.astro";
+import ProductCard from "../../components/ProductCard.astro";
+
+const { data: terms, cacheHint: termCache } = await getTaxonomyTermsWithCacheHint("category");
+const { entries: products, cacheHint } = await getEmDashCollection("products", {
+	status: "published",
+	limit: 100,
+});
+if (Astro.cache?.enabled) {
+	Astro.cache.set(termCache);
+	Astro.cache.set(cacheHint);
+}
+
+const activeCategory = Astro.url.searchParams.get("category");
+const activeTerm = terms.find((t) => t.slug === activeCategory);
+
+const sorted = [...products].sort((a, b) => (a.data.sort_order ?? 999) - (b.data.sort_order ?? 999));
+// "All" shows what can be ordered now; a category page also shows out-of-season items.
+const visible = activeCategory
+	? sorted.filter((p) => (p.data.terms?.category ?? []).some((t) => t.slug === activeCategory))
+	: sorted.filter((p) => p.data.available !== false);
+
+// Group by category, keeping the category order from the admin.
+const order = terms.map((t) => t.slug);
+const groups = new Map<string, typeof products>();
+for (const p of visible) {
+	const key = p.data.terms?.category?.[0]?.slug ?? "other";
+	if (!groups.has(key)) groups.set(key, []);
+	groups.get(key)!.push(p);
+}
+const grouped = [...groups.entries()].sort((a, b) => {
+	const ia = order.indexOf(a[0]);
+	const ib = order.indexOf(b[0]);
+	return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+});
+const labelFor = (slug: string) => terms.find((t) => t.slug === slug)?.label ?? "More";
+
+const heading =
+	activeCategory === "seasonal" ? "Our Special Menu" :
+	activeCategory === "passover" ? "Passover Menu" :
+	activeTerm ? activeTerm.label : "Our Menu";
+---
+
+<Base title={activeTerm ? `${activeTerm.label} Menu` : "Menu"} textured>
+	<section class="menu">
+		<h1 class="section-heading">{heading}</h1>
+
+		<nav class="filters" aria-label="Menu sections">
+			<a href="/products" class={!activeCategory ? "active" : ""}>All</a>
+			{terms.map((t) => (
+				<a href={`/products?category=${t.slug}`} class={activeCategory === t.slug ? "active" : ""}>{t.label}</a>
+			))}
+		</nav>
+
+		{visible.length === 0 ? (
+			<p class="empty">Nothing here right now — check back soon!</p>
+		) : (
+			grouped.map(([slug, items]) => (
+				<section class="group">
+					{grouped.length > 1 && <h2>{labelFor(slug)}</h2>}
+					<div class="list">
+						{items.map((p) => <ProductCard product={p} />)}
+					</div>
+				</section>
+			))
+		)}
+
+		<div class="delivery-note">
+			<h2>Delivery</h2>
+			<p>Pickup is free. Delivery in the Miami area is a flat <strong>$10</strong> — choose it at checkout. Some items can be shipped; <a href="/contact">ask Erin</a>.</p>
+		</div>
+	</section>
+</Base>
+
+<style>
+	.menu { padding: 4rem 1rem; max-width: 48rem; margin: 0 auto; }
+	.filters { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.5rem; margin: -1rem 0 2.5rem; }
+	.filters a {
+		padding: 0.4rem 1rem;
+		border-radius: 999px;
+		border: 2px solid var(--brown);
+		color: var(--brown);
+		background: #fff;
+		font-weight: 600;
+		font-size: 0.9rem;
+		text-decoration: none;
+	}
+	.filters a.active, .filters a:hover { background: var(--brown); color: #fff; }
+	.group { margin-bottom: 3rem; }
+	.group h2 {
+		font-size: 1.25rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--brown);
+		text-align: center;
+		margin: 0 0 1.25rem;
+	}
+	.list { display: flex; flex-direction: column; gap: 3rem; }
+	.empty { text-align: center; color: var(--muted); background: #fff; padding: 2rem; border-radius: var(--radius); }
+	.delivery-note {
+		background: #fff;
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		padding: 1.5rem;
+		text-align: center;
+	}
+	.delivery-note h2 { color: var(--brown); font-size: 1.25rem; margin: 0 0 0.5rem; }
+	.delivery-note p { margin: 0; color: #4b5563; font-size: 0.95rem; }
+</style>

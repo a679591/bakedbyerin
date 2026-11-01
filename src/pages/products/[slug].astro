@@ -1,0 +1,48 @@
+---
+import { getEmDashEntry, getSeoMeta } from "emdash";
+import { PortableText } from "emdash/ui";
+import Base from "../../layouts/Base.astro";
+import ProductCard from "../../components/ProductCard.astro";
+
+const { slug } = Astro.params;
+if (!slug) return Astro.rewrite("/404");
+
+const { entry: product, cacheHint } = await getEmDashEntry("products", slug);
+if (!product) return Astro.rewrite("/404");
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+
+const seo = getSeoMeta(product, {
+	siteTitle: "Baked by Erin",
+	siteUrl: Astro.url.origin,
+	path: `/products/${slug}`,
+});
+const cats = product.data.terms?.category ?? [];
+---
+
+<Base title={seo.title} description={seo.description} content={{ collection: "products", id: product.data.id, slug }} textured>
+	<section class="detail">
+		<p class="back">
+			<a href={cats[0] ? `/products?category=${cats[0].slug}` : "/products"}>← Back to {cats[0]?.label ?? "the menu"}</a>
+		</p>
+		<ProductCard product={product} linkTitle={false} />
+		{product.data.description && (
+			<div class="desc">
+				<PortableText value={product.data.description} />
+			</div>
+		)}
+	</section>
+</Base>
+
+<style>
+	.detail { padding: 3rem 1rem 4rem; max-width: 48rem; margin: 0 auto; }
+	.back { margin: 0 0 1rem; }
+	.back a { color: var(--brown); font-weight: 600; text-decoration: none; }
+	.desc {
+		background: #fff;
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		padding: 1.25rem 1.5rem;
+		margin-top: 1.5rem;
+		color: #4b5563;
+	}
+</style>

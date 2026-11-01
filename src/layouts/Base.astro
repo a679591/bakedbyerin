@@ -1,0 +1,359 @@
+---
+import { getMenuWithCacheHint, getSiteSettingsWithCacheHint } from "emdash";
+import { EmDashHead } from "emdash/ui";
+import { createPublicPageContext } from "emdash/page";
+
+interface Props {
+	title?: string;
+	description?: string;
+	content?: { collection: string; id: string; slug?: string | null };
+	/** Use the soft background image from the menu pages. */
+	textured?: boolean;
+}
+
+const { title, description, content, textured = false } = Astro.props;
+
+const { data: settings, cacheHint: settingsCache } = await getSiteSettingsWithCacheHint();
+const { data: menu, cacheHint: menuCache } = await getMenuWithCacheHint("primary");
+
+const siteTitle = settings?.title ?? "Baked by Erin";
+const pageTitle = title ? `${siteTitle} – ${title}` : siteTitle;
+const pageDescription = description ?? settings?.tagline ?? "";
+
+const pageCtx = createPublicPageContext({
+	Astro,
+	kind: content ? "content" : "custom",
+	title: pageTitle,
+	pageTitle: title ?? null,
+	description: pageDescription,
+	siteName: siteTitle,
+	siteUrl: Astro.url.origin,
+	content,
+});
+
+if (Astro.cache?.enabled) {
+	Astro.cache.set(settingsCache);
+	Astro.cache.set(menuCache);
+}
+
+const items = menu?.items ?? [];
+const year = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{pageTitle}</title>
+		<meta name="description" content={pageDescription} />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+		<EmDashHead page={pageCtx} />
+	</head>
+	<body class={textured ? "textured" : ""}>
+		<header class="site-header">
+			<div class="header-inner">
+				<a class="brand" href="/">🧁 BAKED BY ERIN</a>
+
+				<button class="hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false" aria-controls="nav-menu">
+					<span></span><span></span><span></span>
+				</button>
+
+				<nav id="nav-menu" aria-label="Primary">
+					{items.map((item) => (
+						<a href={item.url}>{item.label}</a>
+					))}
+					<a class="cart-link" href="/order" aria-label="Cart">
+						🛒<span id="cart-badge" class="cart-badge" hidden></span>
+					</a>
+				</nav>
+			</div>
+		</header>
+
+		<main class="site-main">
+			<slot />
+		</main>
+
+		<footer class="site-footer">
+			<div class="footer-links">
+				<a href="/#about">About</a>
+				<a href="/products">Menu</a>
+				<a href="/products?category=seasonal">Seasonal</a>
+				<a href="/products?category=passover">Passover</a>
+				<a href="/how-to-order">How to Order</a>
+				<a href="/contact">Contact</a>
+				<a href="https://instagram.com/getbakedbyerin" target="_blank" rel="noopener noreferrer">Instagram</a>
+			</div>
+			<p>&copy; {year} Baked by Erin. All rights reserved.</p>
+			<p class="admin-link"><a href="/_emdash/admin">Admin</a></p>
+		</footer>
+
+		<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+		<script is:inline>
+			// ── Cart (shared by every page) ───────────────────────────────
+			// Items: { slug, title, size, mixin, unitPrice, qty }. Prices here are for display only;
+			// the server recalculates everything from the catalog when the order is placed.
+			(function () {
+				var KEY = "bbe-cart";
+				function read() {
+					try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch (e) { return []; }
+				}
+				function write(items) {
+					try { localStorage.setItem(KEY, JSON.stringify(items)); } catch (e) {}
+					badge();
+				}
+				function count() {
+					return read().reduce(function (n, i) { return n + (i.qty || 0); }, 0);
+				}
+				function badge() {
+					var el = document.getElementById("cart-badge");
+					if (!el) return;
+					var n = count();
+					el.textContent = n > 99 ? "99+" : String(n);
+					el.hidden = n === 0;
+				}
+				function toast(msg) {
+					var t = document.getElementById("toast");
+					if (!t) return;
+					t.textContent = msg;
+					t.hidden = false;
+					clearTimeout(t._timer);
+					t._timer = setTimeout(function () { t.hidden = true; }, 2200);
+				}
+				function add(item) {
+					var items = read();
+					var match = items.find(function (i) {
+						return i.slug === item.slug && (i.size || "") === (item.size || "") && (i.mixin || "") === (item.mixin || "");
+					});
+					if (match) match.qty += 1; else items.push(Object.assign({ qty: 1 }, item));
+					write(items);
+					toast("Added: " + item.title + (item.size ? " (" + item.size + ")" : "") + (item.mixin ? " with " + item.mixin : ""));
+				}
+				window.bbeCart = { read: read, write: write, add: add, badge: badge, toast: toast };
+
+				// Product card buttons (ProductCard.astro): mix-in pills and add buttons.
+				document.addEventListener("click", function (e) {
+					var pill = e.target.closest("[data-mixin]");
+					if (pill) {
+						var card = pill.closest("[data-product]");
+						card.querySelectorAll("[data-mixin]").forEach(function (b) {
+							b.classList.toggle("selected", b === pill);
+							b.setAttribute("aria-pressed", b === pill ? "true" : "false");
+						});
+						card.dataset.selectedMixin = pill.dataset.mixin;
+						card.querySelectorAll(".add-btn").forEach(function (b) { b.disabled = false; });
+						var prompt = card.querySelector(".mixin-prompt");
+						if (prompt) prompt.hidden = true;
+						return;
+					}
+					// Optional add-ons toggle on and off (one at a time).
+					var addon = e.target.closest("[data-addon]");
+					if (addon) {
+						var ac = addon.closest("[data-product]");
+						var turnOn = addon.getAttribute("aria-pressed") !== "true";
+						ac.querySelectorAll("[data-addon]").forEach(function (b) {
+							var on = turnOn && b === addon;
+							b.classList.toggle("selected", on);
+							b.setAttribute("aria-pressed", on ? "true" : "false");
+						});
+						ac.dataset.selectedMixin = turnOn ? addon.dataset.addon : "";
+						return;
+					}
+					var btn = e.target.closest(".add-btn");
+					if (btn) {
+						var c = btn.closest("[data-product]");
+						if (c.dataset.hasMixins === "true" && !c.dataset.selectedMixin) {
+							toast("Pick a mix-in first");
+							return;
+						}
+						add({
+							slug: c.dataset.product,
+							title: c.dataset.title,
+							size: btn.dataset.size || "",
+							mixin: c.dataset.selectedMixin || "",
+							unitPrice: Number(btn.dataset.price),
+						});
+					}
+				});
+
+				// Mobile menu
+				var hb = document.getElementById("hamburger-btn");
+				var nav = document.getElementById("nav-menu");
+				if (hb && nav) {
+					hb.addEventListener("click", function () {
+						var open = nav.classList.toggle("open");
+						hb.setAttribute("aria-expanded", open ? "true" : "false");
+					});
+					nav.querySelectorAll("a").forEach(function (a) {
+						a.addEventListener("click", function () { nav.classList.remove("open"); hb.setAttribute("aria-expanded", "false"); });
+					});
+				}
+
+				badge();
+			})();
+		</script>
+
+		<style is:global>
+			:root {
+				--brown: #8b4513;
+				--brown-dark: #7a3b10;
+				--accent: #d4734a;
+				--accent-dark: #c55a35;
+				--fg: #2d2d2d;
+				--muted: #6b7280;
+				--border: #e5e7eb;
+				--soft: #f9fafb;
+				--radius: 8px;
+			}
+			* { box-sizing: border-box; }
+			html { color-scheme: light; scroll-behavior: smooth; }
+			body {
+				margin: 0;
+				font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+				color: var(--fg);
+				background: #fff;
+				line-height: 1.55;
+				-webkit-font-smoothing: antialiased;
+			}
+			body.textured {
+				background-image: url("/images/background_color.png");
+				background-size: cover;
+				background-position: center;
+				background-attachment: fixed;
+			}
+			a { color: var(--accent); }
+			img { max-width: 100%; }
+
+			.site-header {
+				position: sticky;
+				top: 0;
+				z-index: 100;
+				background: #fff;
+				border-bottom: 1px solid var(--border);
+			}
+			.header-inner {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 1rem 2rem;
+				max-width: 1100px;
+				margin: 0 auto;
+				position: relative;
+			}
+			.brand { font-weight: 700; font-size: 1.2rem; color: var(--brown); text-decoration: none; }
+			#nav-menu { display: flex; gap: 2rem; align-items: center; }
+			#nav-menu a { text-decoration: none; color: var(--fg); font-weight: 500; }
+			#nav-menu a:hover { color: var(--accent); }
+			.cart-link { font-size: 1.4rem; position: relative; display: inline-block; }
+			.cart-badge {
+				position: absolute;
+				top: -8px;
+				right: -10px;
+				background: var(--accent);
+				color: #fff;
+				border-radius: 999px;
+				min-width: 18px;
+				height: 18px;
+				padding: 0 4px;
+				font-size: 0.65rem;
+				font-weight: 700;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			.cart-badge[hidden] { display: none; }
+			.hamburger {
+				display: none;
+				flex-direction: column;
+				gap: 5px;
+				cursor: pointer;
+				background: none;
+				border: none;
+				padding: 4px;
+			}
+			.hamburger span { width: 25px; height: 3px; background: var(--fg); border-radius: 3px; display: block; }
+			@media (max-width: 768px) {
+				.header-inner { padding: 1rem 1.25rem; }
+				.hamburger { display: flex; }
+				#nav-menu {
+					display: none;
+					position: absolute;
+					top: 100%;
+					left: 0;
+					right: 0;
+					flex-direction: column;
+					align-items: flex-start;
+					gap: 1rem;
+					background: #fff;
+					padding: 1rem 1.25rem;
+					border-bottom: 1px solid var(--border);
+				}
+				#nav-menu.open { display: flex; }
+			}
+
+			.site-main { min-height: 60vh; }
+
+			.section-heading {
+				font-size: 2rem;
+				font-weight: 700;
+				text-transform: uppercase;
+				letter-spacing: 0.05em;
+				color: var(--brown);
+				text-align: center;
+				margin: 0 0 2.5rem;
+			}
+			.btn-primary {
+				display: inline-block;
+				background: var(--accent);
+				color: #fff;
+				font-weight: 600;
+				text-transform: uppercase;
+				letter-spacing: 0.05em;
+				padding: 0.75rem 2rem;
+				border-radius: 4px;
+				border: none;
+				font-size: 1.05rem;
+				text-decoration: none;
+				cursor: pointer;
+				transition: all 0.3s ease;
+			}
+			.btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); }
+			.btn-primary:disabled { opacity: 0.6; cursor: wait; transform: none; }
+
+			.site-footer {
+				text-align: center;
+				padding: 2rem 1rem;
+				border-top: 1px solid var(--border);
+				background: #fff;
+				font-size: 0.875rem;
+				color: var(--muted);
+			}
+			.footer-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.75rem 2rem; margin-bottom: 1rem; }
+			.footer-links a { color: var(--muted); text-decoration: none; }
+			.footer-links a:hover { color: var(--accent); }
+			.site-footer p { margin: 0.25rem 0; }
+			.admin-link a { color: #9ca3af; font-size: 0.75rem; text-decoration: none; }
+
+			.toast {
+				position: fixed;
+				left: 50%;
+				bottom: 1.5rem;
+				transform: translateX(-50%);
+				background: var(--brown);
+				color: #fff;
+				padding: 0.75rem 1.25rem;
+				border-radius: 999px;
+				font-weight: 600;
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+				z-index: 200;
+				max-width: calc(100% - 2rem);
+				text-align: center;
+			}
+			.toast[hidden] { display: none; }
+		</style>
+	</body>
+</html>

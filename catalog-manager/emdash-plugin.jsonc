@@ -1,0 +1,31 @@
+{
+	"$schema": "./node_modules/@emdash-cms/plugin-cli/schemas/emdash-plugin.schema.json",
+
+	"slug": "catalog-manager",
+	"publisher": "did:plc:hacknightbakery000000000000000",
+
+	"license": "MIT",
+	"author": { "name": "Baked by Erin" },
+	"security": { "url": "https://emdashcms.com" },
+
+	// Friendly catalog manager for non-technical staff: add and list products
+	// (banana bread + granola) without touching the full content editor.
+	"capabilities": [
+		"schema:read",
+		"content:read",
+		"content:write",
+		"content:publish",
+		"taxonomies:read",
+		"taxonomies:write",
+		"media:read",
+	],
+
+	"allowedHosts": [],
+	"storage": {},
+
+	"admin": {
+		"pages": [
+			{ "path": "/catalog", "label": "Catalog", "icon": "tag", "group": "Shop" }
+		]
+	}
+}

@@ -1,0 +1,37 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base title="Contact" description="Get in touch with Erin.">
+	<section class="contact">
+		<h1 class="section-heading">Get In Touch</h1>
+		<div class="rows">
+			<div class="row">
+				<span class="emoji" aria-hidden="true">📧</span>
+				<div>
+					<p class="label">Email</p>
+					<a href="mailto:getbakedbyerin@gmail.com">getbakedbyerin@gmail.com</a>
+				</div>
+			</div>
+			<div class="row">
+				<span class="emoji" aria-hidden="true">📸</span>
+				<div>
+					<p class="label">Instagram</p>
+					<a href="https://www.instagram.com/getbakedbyerin/" target="_blank" rel="noopener noreferrer">@getbakedbyerin</a>
+				</div>
+			</div>
+		</div>
+		<p class="note">Ready to order? <a href="/products">Browse the menu</a> and check out from your cart — Erin will confirm by text or email.</p>
+	</section>
+</Base>
+
+<style>
+	.contact { padding: 4rem 1rem; max-width: 56rem; margin: 0 auto; text-align: center; }
+	.rows { display: flex; flex-direction: column; gap: 2rem; align-items: center; }
+	.row { display: flex; align-items: center; gap: 1rem; text-align: left; }
+	.emoji { font-size: 1.5rem; }
+	.label { font-weight: 500; margin: 0; }
+	.row a { color: var(--accent); text-decoration: none; }
+	.row a:hover { text-decoration: underline; }
+	.note { margin-top: 3rem; color: #4b5563; }
+</style>

@@ -1,0 +1,27 @@
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# cloudflare / wrangler
+.wrangler/
+.dev.vars
+
+# emdash local dev
+data.db*
+uploads/
+.emdash/
+
+# catalog-manager plugin (nested package)
+catalog-manager/node_modules/
+catalog-manager/dist/
+catalog-manager/.emdash/
+
+# types (generated)
+emdash-env.d.ts
+
+# misc
+.DS_Store
+*.log

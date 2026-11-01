@@ -1,0 +1,79 @@
+---
+import { getEmDashEntry } from "emdash";
+import Base from "../../../layouts/Base.astro";
+
+const { id } = Astro.params;
+if (!id) return Astro.rewrite("/404");
+
+const { entry: order } = await getEmDashEntry("orders", id);
+type Item = { product: string; size?: string; mixin?: string; quantity: number; unit_price: number };
+const items = (order?.data.items as Item[] | undefined) ?? [];
+const money = (n: unknown) => (typeof n === "number" ? `$${Number.isInteger(n) ? n : n.toFixed(2)}` : "—");
+const isDelivery = order?.data.fulfillment === "delivery";
+const when = (() => {
+	const raw = order?.data.pickup_date;
+	if (!raw) return "";
+	const d = new Date(String(raw));
+	return Number.isNaN(d.getTime())
+		? String(raw)
+		: d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
+})();
+const extras = (it: Item) => [it.size, it.mixin].filter(Boolean).join(", ");
+---
+
+<Base title="Order received" description="Your order is in." textured>
+	<section class="confirm">
+		<div class="panel">
+			<div class="icon" aria-hidden="true">🧁</div>
+			<h1>Thank you!</h1>
+			{order ? (
+				<>
+					<p class="lead">Your order is in. Erin will reach out to confirm it and let you know how to pay.</p>
+					<table class="summary">
+						<tbody>
+							<tr><th>Name</th><td>{order.data.customer_name}</td></tr>
+							<tr><th>Items</th><td>
+								<ul>
+									{items.map((it) => (
+										<li>{it.quantity} × {it.product}{extras(it) ? ` (${extras(it)})` : ""} — {money(it.unit_price * it.quantity)}</li>
+									))}
+								</ul>
+							</td></tr>
+							{isDelivery && <tr><th>Delivery</th><td>{money(order.data.delivery_fee)} to {order.data.delivery_address}</td></tr>}
+							<tr><th>Total</th><td><strong>{money(order.data.total)}</strong></td></tr>
+							<tr><th>{isDelivery ? "Delivery date" : "Pickup date"}</th><td>{when}</td></tr>
+							{order.data.notes ? <tr><th>Notes</th><td>{order.data.notes}</td></tr> : null}
+						</tbody>
+					</table>
+					<p class="pay">Payment: PayPal, Venmo, CashApp, Zelle, Cash, or Check — after Erin confirms.</p>
+					<p class="ref">Order ref: <code>{id}</code></p>
+				</>
+			) : (
+				<p class="lead">We couldn't find that order. If you think this is a mistake, <a href="/contact">contact Erin</a>.</p>
+			)}
+			<a class="btn-primary" href="/products">Back to the Menu</a>
+		</div>
+	</section>
+</Base>
+
+<style>
+	.confirm { padding: 4rem 1rem; max-width: 40rem; margin: 0 auto; }
+	.panel {
+		background: #fff;
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+		padding: 2rem 1.5rem;
+		text-align: center;
+	}
+	.icon { font-size: 3rem; }
+	h1 { color: var(--brown); text-transform: uppercase; letter-spacing: 0.05em; margin: 0.5rem 0; }
+	.lead { color: #4b5563; margin: 0 0 1.5rem; }
+	.summary { width: 100%; border-collapse: collapse; text-align: left; margin-bottom: 1.25rem; }
+	.summary th { width: 8.5rem; vertical-align: top; color: var(--muted); font-weight: 600; padding: 0.6rem 1rem 0.6rem 0; border-top: 1px solid var(--border); }
+	.summary td { padding: 0.6rem 0; border-top: 1px solid var(--border); }
+	.summary ul { margin: 0; padding-left: 1.1rem; }
+	.pay { background: var(--soft); border-radius: 6px; padding: 0.75rem 1rem; font-size: 0.9rem; }
+	.ref { color: var(--muted); font-size: 0.85rem; margin: 1rem 0 1.5rem; }
+	.ref code { background: var(--soft); padding: 0.1rem 0.4rem; border-radius: 4px; }
+</style>

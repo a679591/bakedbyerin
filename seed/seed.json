@@ -1,0 +1,645 @@
+{
+	"$schema": "https://emdashcms.com/seed.schema.json",
+	"version": "1",
+	"meta": {
+		"name": "Baked by Erin",
+		"description": "Handcrafted breads, cakes and treats from home baker Erin in Miami. Order ahead; pay after Erin confirms.",
+		"author": "Baked by Erin"
+	},
+	"settings": {
+		"title": "Baked by Erin",
+		"tagline": "Handcrafted treats made with love for every occasion",
+		"postsPerPage": 12
+	},
+	"collections": [
+		{
+			"slug": "products",
+			"label": "Products",
+			"labelSingular": "Product",
+			"supports": [
+				"drafts",
+				"search",
+				"seo"
+			],
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string",
+					"required": true,
+					"searchable": true
+				},
+				{
+					"slug": "summary",
+					"label": "Summary",
+					"type": "text",
+					"searchable": true
+				},
+				{
+					"slug": "highlights",
+					"label": "Highlights (one per line)",
+					"type": "text"
+				},
+				{
+					"slug": "mixins",
+					"label": "Mix-ins: \"A, B\" = customer must pick one; \"optional: A\" = free add-on they can skip",
+					"type": "string"
+				},
+				{
+					"slug": "description",
+					"label": "Description",
+					"type": "portableText",
+					"searchable": true
+				},
+				{
+					"slug": "price",
+					"label": "Price (USD) — small size, or the only price",
+					"type": "number",
+					"required": true
+				},
+				{
+					"slug": "price_large",
+					"label": "Large size price (USD) — leave empty if one size only",
+					"type": "number"
+				},
+				{
+					"slug": "unit",
+					"label": "Unit",
+					"type": "select",
+					"validation": {
+						"options": [
+							"loaf",
+							"cake",
+							"bag",
+							"bottle",
+							"box"
+						],
+						"default": "loaf"
+					}
+				},
+				{
+					"slug": "featured_image",
+					"label": "Featured Image",
+					"type": "image"
+				},
+				{
+					"slug": "available",
+					"label": "Available",
+					"type": "boolean"
+				},
+				{
+					"slug": "sort_order",
+					"label": "Menu order (lower shows first)",
+					"type": "integer"
+				}
+			]
+		},
+		{
+			"slug": "orders",
+			"label": "Orders",
+			"labelSingular": "Order",
+			"supports": [],
+			"fields": [
+				{
+					"slug": "customer_name",
+					"label": "Customer Name",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "customer_email",
+					"label": "Customer Email",
+					"type": "string"
+				},
+				{
+					"slug": "customer_phone",
+					"label": "Customer Phone",
+					"type": "string"
+				},
+				{
+					"slug": "pickup_name",
+					"label": "Pickup Name",
+					"type": "string"
+				},
+				{
+					"slug": "pickup_date",
+					"label": "Requested date",
+					"type": "datetime",
+					"required": true
+				},
+				{
+					"slug": "fulfillment",
+					"label": "Pickup or delivery",
+					"type": "select",
+					"validation": {
+						"options": [
+							"pickup",
+							"delivery"
+						],
+						"default": "pickup"
+					}
+				},
+				{
+					"slug": "delivery_address",
+					"label": "Delivery address",
+					"type": "text"
+				},
+				{
+					"slug": "items",
+					"label": "Items",
+					"type": "repeater",
+					"validation": {
+						"subFields": [
+							{
+								"slug": "product",
+								"label": "Product",
+								"type": "string",
+								"required": true
+							},
+							{
+								"slug": "size",
+								"label": "Size",
+								"type": "string"
+							},
+							{
+								"slug": "mixin",
+								"label": "Mix-in",
+								"type": "string"
+							},
+							{
+								"slug": "quantity",
+								"label": "Quantity",
+								"type": "integer",
+								"required": true
+							},
+							{
+								"slug": "unit_price",
+								"label": "Unit Price",
+								"type": "number",
+								"required": true
+							}
+						]
+					}
+				},
+				{
+					"slug": "delivery_fee",
+					"label": "Delivery fee (USD)",
+					"type": "number"
+				},
+				{
+					"slug": "total",
+					"label": "Total (USD)",
+					"type": "number",
+					"required": true
+				},
+				{
+					"slug": "notes",
+					"label": "Notes",
+					"type": "text"
+				},
+				{
+					"slug": "payment_method",
+					"label": "Payment Method",
+					"type": "select",
+					"validation": {
+						"options": [
+							"pay-after-confirmation"
+						],
+						"default": "pay-after-confirmation"
+					}
+				},
+				{
+					"slug": "order_status",
+					"label": "Order Status",
+					"type": "select",
+					"validation": {
+						"options": [
+							"new",
+							"confirmed",
+							"paid",
+							"ready",
+							"completed",
+							"cancelled"
+						],
+						"default": "new"
+					}
+				}
+			]
+		}
+	],
+	"taxonomies": [
+		{
+			"name": "category",
+			"label": "Categories",
+			"labelSingular": "Category",
+			"hierarchical": false,
+			"collections": [
+				"products"
+			],
+			"terms": [
+				{
+					"slug": "breads",
+					"label": "Breads"
+				},
+				{
+					"slug": "cakes",
+					"label": "Cakes"
+				},
+				{
+					"slug": "granola",
+					"label": "Granola"
+				},
+				{
+					"slug": "seasonal",
+					"label": "Seasonal"
+				},
+				{
+					"slug": "passover",
+					"label": "Passover"
+				}
+			]
+		}
+	],
+	"menus": [
+		{
+			"name": "primary",
+			"label": "Primary Navigation",
+			"items": [
+				{
+					"type": "custom",
+					"label": "Home",
+					"url": "/"
+				},
+				{
+					"type": "custom",
+					"label": "Menu",
+					"url": "/products"
+				},
+				{
+					"type": "custom",
+					"label": "Seasonal",
+					"url": "/products?category=seasonal"
+				},
+				{
+					"type": "custom",
+					"label": "Passover",
+					"url": "/products?category=passover"
+				},
+				{
+					"type": "custom",
+					"label": "Contact",
+					"url": "/contact"
+				}
+			]
+		}
+	],
+	"content": {
+		"products": [
+			{
+				"id": "product-banana-espresso-bread",
+				"slug": "banana-espresso-bread",
+				"status": "published",
+				"data": {
+					"title": "Banana Espresso Bread",
+					"summary": "A bold twist on classic banana bread with espresso infusion",
+					"highlights": "Not too sweet\nPairs well with ice cream\nMoist texture",
+					"price": 15,
+					"unit": "loaf",
+					"available": true,
+					"sort_order": 10,
+					"price_large": 30,
+					"featured_image": {
+						"$media": {
+							"url": "https://bakedbyerin.com/images/banana-bread-plain.jpeg",
+							"alt": "Banana Espresso Bread",
+							"filename": "banana-bread-plain.jpeg"
+						}
+					},
+					"mixins": "optional: Chocolate Chips"
+				},
+				"taxonomies": {
+					"category": [
+						"breads"
+					]
+				}
+			},
+			{
+				"id": "product-double-chocolate-banana-bread",
+				"slug": "double-chocolate-banana-bread",
+				"status": "published",
+				"data": {
+					"title": "Double Chocolate Banana Bread",
+					"summary": "Banana bread loaded with cocoa and chocolate chips",
+					"highlights": "Rich cocoa base\nSemi-sweet chips\nPerfect for dessert",
+					"price": 15,
+					"unit": "loaf",
+					"available": true,
+					"sort_order": 20,
+					"price_large": 30,
+					"featured_image": {
+						"$media": {
+							"url": "https://bakedbyerin.com/images/double_chocolate_banana_bread.jpg",
+							"alt": "Double Chocolate Banana Bread",
+							"filename": "double_chocolate_banana_bread.jpg"
+						}
+					}
+				},
+				"taxonomies": {
+					"category": [
+						"breads"
+					]
+				}
+			},
+			{
+				"id": "product-banana-bread-with-mix-ins",
+				"slug": "banana-bread-with-mix-ins",
+				"status": "published",
+				"data": {
+					"title": "Banana Bread with Mix-Ins",
+					"summary": "Classic banana bread loaded with your choice of mix-in",
+					"highlights": "Chocolate Chips\nPeanut Butter Cups\nOreos",
+					"price": 15,
+					"unit": "loaf",
+					"available": false,
+					"sort_order": 30,
+					"price_large": 30,
+					"mixins": "Chocolate Chips, Peanut Butter Cups, Oreos",
+					"featured_image": {
+						"$media": {
+							"url": "https://bakedbyerin.com/images/banana_espresso_bread.jpg",
+							"alt": "Banana Bread with Mix-Ins",
+							"filename": "banana_espresso_bread.jpg"
+						}
+					}
+				},
+				"taxonomies": {
+					"category": [
+						"breads"
+					]
+				}
+			},
+			{
+				"id": "product-carrot-zucchini-walnut-bread",
+				"slug": "carrot-zucchini-walnut-bread",
+				"status": "published",
+				"data": {
+					"title": "Carrot Zucchini Walnut Bread",
+					"summary": "Nutritious and hearty loaf with a blend of veggies and nuts",
+					"highlights": "No refined sugar\nPacked with veggies\nCrunchy walnut texture",
+					"price": 15,
+					"unit": "loaf",
+					"available": true,
+					"sort_order": 40,
+					"price_large": 30,
+					"featured_image": {
+						"$media": {
+							"url": "https://bakedbyerin.com/images/carrot_zucchini_walnut_bread.jpg",
+							"alt": "Carrot Zucchini Walnut Bread",
+							"filename": "carrot_zucchini_walnut_bread.jpg"
+						}
+					}
+				},
+				"taxonomies": {
+					"category": [
+						"breads"
+					]
+				}
+			},
+			{
+				"id": "product-chunky-peanut-butter-granola",
+				"slug": "chunky-peanut-butter-granola",
+				"status": "published",
+				"data": {
+					"title": "Chunky Peanut Butter Granola",
+					"summary": "Crunchy clusters with oats, nuts, coconut, and creamy peanut butter",
+					"highlights": "1 lb bag\nNo preservatives\nChunky clusters\nGreat for breakfast or snacking",
+					"price": 15,
+					"unit": "bag",
+					"available": true,
+					"sort_order": 50,
+					"featured_image": {
+						"$media": {
+							"url": "https://bakedbyerin.com/images/peanut_butter_granola.jpg",
+							"alt": "Chunky Peanut Butter Granola",
+							"filename": "peanut_butter_granola.jpg"
+						}
+					}
+				},
+				"taxonomies": {
+					"category": [
+						"granola"
+					]
+				}
+			},
+			{
+				"id": "product-carrot-cake",
+				"slug": "carrot-cake",
+				"status": "published",
+				"data": {
+					"title": "Carrot Cake 8\"",
+					"summary": "Moist and spiced with cinnamon, topped with cream cheese frosting",
+					"highlights": "8-inch round\nCream cheese frosting\nContains walnuts",
+					"price": 45,
+					"unit": "cake",
+					"available": true,
+					"sort_order": 60,
+					"featured_image": {
+						"$media": {
+							"url": "https://bakedbyerin.com/images/carrot_cake.jpg",
+							"alt": "Carrot Cake 8\"",
+							"filename": "carrot_cake.jpg"
+						}
+					}
+				},
+				"taxonomies": {
+					"category": [
+						"cakes"
+					]
+				}
+			},
+			{
+				"id": "product-chocolate-cake",
+				"slug": "chocolate-cake",
+				"status": "published",
+				"data": {
+					"title": "Chocolate Cake 8\"",
+					"summary": "Rich and decadent chocolate layers with ganache frosting",
+					"highlights": "8-inch round\nRich chocolate frosting\nMoist crumb texture",
+					"price": 45,
+					"unit": "cake",
+					"available": true,
+					"sort_order": 70,
+					"featured_image": {
+						"$media": {
+							"url": "https://bakedbyerin.com/images/chocolate_cake.jpg",
+							"alt": "Chocolate Cake 8\"",
+							"filename": "chocolate_cake.jpg"
+						}
+					}
+				},
+				"taxonomies": {
+					"category": [
+						"cakes"
+					]
+				}
+			},
+			{
+				"id": "product-mango-bread",
+				"slug": "mango-bread",
+				"status": "published",
+				"data": {
+					"title": "Mango Bread",
+					"summary": "A tropical fruit bread for any time",
+					"highlights": "Great mango flavor\nGreat snack anytime\nMoist texture",
+					"price": 15,
+					"unit": "loaf",
+					"available": true,
+					"sort_order": 80,
+					"price_large": 30,
+					"featured_image": {
+						"$media": {
+							"url": "https://bakedbyerin.com/images/mango_bread.JPG",
+							"alt": "Mango Bread",
+							"filename": "mango_bread.jpg"
+						}
+					}
+				},
+				"taxonomies": {
+					"category": [
+						"seasonal"
+					]
+				}
+			},
+			{
+				"id": "product-mango-syrup",
+				"slug": "mango-syrup",
+				"status": "published",
+				"data": {
+					"title": "Mango Syrup (8 oz)",
+					"summary": "Light and sweet mango syrup",
+					"highlights": "Great mango flavor\nGreat for mixed drinks\nBlends well with batters",
+					"price": 15,
+					"unit": "bottle",
+					"available": true,
+					"sort_order": 90,
+					"featured_image": {
+						"$media": {
+							"url": "https://bakedbyerin.com/images/mango_syrup.jpeg",
+							"alt": "Mango Syrup (8 oz)",
+							"filename": "mango_syrup.jpeg"
+						}
+					}
+				},
+				"taxonomies": {
+					"category": [
+						"seasonal"
+					]
+				}
+			},
+			{
+				"id": "product-coconut-macaroons",
+				"slug": "coconut-macaroons",
+				"status": "published",
+				"data": {
+					"title": "Coconut Macaroons",
+					"summary": "A traditional coconut macaroon for Passover",
+					"highlights": "",
+					"price": 20,
+					"unit": "box",
+					"available": false,
+					"sort_order": 100,
+					"featured_image": {
+						"$media": {
+							"url": "https://bakedbyerin.com/images/macaroons_plain.jpeg",
+							"alt": "Coconut Macaroons",
+							"filename": "macaroons_plain.jpeg"
+						}
+					}
+				},
+				"taxonomies": {
+					"category": [
+						"passover"
+					]
+				}
+			},
+			{
+				"id": "product-chocolate-dipped-coconut-macaroons",
+				"slug": "chocolate-dipped-coconut-macaroons",
+				"status": "published",
+				"data": {
+					"title": "Chocolate Dipped Coconut Macaroons",
+					"summary": "A sweet treat for Passover",
+					"highlights": "",
+					"price": 20,
+					"unit": "box",
+					"available": false,
+					"sort_order": 110,
+					"featured_image": {
+						"$media": {
+							"url": "https://bakedbyerin.com/images/macaroons_chocolate.jpeg",
+							"alt": "Chocolate Dipped Coconut Macaroons",
+							"filename": "macaroons_chocolate.jpeg"
+						}
+					}
+				},
+				"taxonomies": {
+					"category": [
+						"passover"
+					]
+				}
+			},
+			{
+				"id": "product-matzah-bark",
+				"slug": "matzah-bark",
+				"status": "published",
+				"data": {
+					"title": "Matzah Bark",
+					"summary": "The candy bar for Passover",
+					"highlights": "",
+					"price": 20,
+					"unit": "box",
+					"available": false,
+					"sort_order": 120,
+					"featured_image": {
+						"$media": {
+							"url": "https://bakedbyerin.com/images/matzah_bark.jpeg",
+							"alt": "Matzah Bark",
+							"filename": "matzah_bark.jpeg"
+						}
+					}
+				},
+				"taxonomies": {
+					"category": [
+						"passover"
+					]
+				}
+			},
+			{
+				"id": "product-flourless-brownies",
+				"slug": "flourless-brownies",
+				"status": "published",
+				"data": {
+					"title": "Flourless Brownies",
+					"summary": "Fudgy and gooey flourless brownies",
+					"highlights": "",
+					"price": 20,
+					"unit": "box",
+					"available": false,
+					"sort_order": 130,
+					"featured_image": {
+						"$media": {
+							"url": "https://bakedbyerin.com/images/passover_brownies.jpeg",
+							"alt": "Flourless Brownies",
+							"filename": "passover_brownies.jpeg"
+						}
+					}
+				},
+				"taxonomies": {
+					"category": [
+						"passover"
+					]
+				}
+			}
+		]
+	}
+}

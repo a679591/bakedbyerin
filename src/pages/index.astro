@@ -1,0 +1,78 @@
+---
+import { getEmDashCollection } from "emdash";
+import Base from "../layouts/Base.astro";
+import ProductCard from "../components/ProductCard.astro";
+
+const { entries: products, cacheHint } = await getEmDashCollection("products", {
+	status: "published",
+	where: { available: true },
+	limit: 50,
+});
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+
+const featured = [...products]
+	.sort((a, b) => (a.data.sort_order ?? 999) - (b.data.sort_order ?? 999))
+	.slice(0, 3);
+---
+
+<Base title="Home">
+	<section class="hero">
+		<h1>FRESHLY BAKED TREATS</h1>
+		<p>Handcrafted treats made with love for every occasion</p>
+		<a href="/products" class="btn-primary">View Menu</a>
+	</section>
+
+	{featured.length > 0 && (
+		<section class="favorites">
+			<h2 class="section-heading">Favorites</h2>
+			<div class="grid">
+				{featured.map((p) => <ProductCard product={p} />)}
+			</div>
+			<p class="more"><a href="/products">See the full menu →</a></p>
+		</section>
+	)}
+
+	<section id="about" class="about">
+		<h2 class="section-heading">About Erin</h2>
+		<div class="avatar" aria-hidden="true">👩‍🍳</div>
+		<p>
+			Hi, I'm Erin—a home baker obsessed with creating mouthwatering treats for every occasion.
+			Whether you're craving classic cakes or artisanal breads, I pour my heart into every batch.
+			Each recipe is crafted with premium ingredients and years of passion for the perfect bite.
+		</p>
+	</section>
+</Base>
+
+<style>
+	.hero { text-align: center; padding: 6rem 1rem; max-width: 56rem; margin: 0 auto; }
+	.hero h1 {
+		font-size: 4.5rem;
+		font-weight: 900;
+		line-height: 1.1;
+		letter-spacing: -0.02em;
+		color: var(--brown);
+		margin: 0 0 1.5rem;
+	}
+	.hero p { font-size: 1.25rem; color: #4b5563; margin: 0 auto 2rem; max-width: 42rem; }
+	.favorites { padding: 3rem 1rem 4rem; max-width: 1100px; margin: 0 auto; }
+	.grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+	.more { text-align: center; margin: 2rem 0 0; font-weight: 600; }
+	.more a { text-decoration: none; }
+	.about { background: var(--soft); padding: 4rem 1rem; text-align: center; }
+	.avatar {
+		width: 8rem;
+		height: 8rem;
+		border-radius: 999px;
+		background: #ffedd5;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 3rem;
+		margin: 0 auto 1.5rem;
+	}
+	.about p { max-width: 42rem; margin: 0 auto; font-size: 1.125rem; color: #4b5563; line-height: 1.7; }
+	@media (max-width: 768px) {
+		.hero { padding: 4rem 1rem; }
+		.hero h1 { font-size: 3rem; }
+	}
+</style>

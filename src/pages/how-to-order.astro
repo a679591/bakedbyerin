@@ -1,0 +1,37 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base title="How to Order" description="How ordering, pickup, delivery and payment work.">
+	<section class="how">
+		<h1 class="section-heading">How to Order</h1>
+		<ol class="steps">
+			<li><span>1</span><div><strong>Browse the menu</strong> and add what you'd like to your cart — choose a size and mix-in where offered.</div></li>
+			<li><span>2</span><div><strong>Check out from the cart 🛒</strong> — pick pickup (free) or delivery in Miami ($10), and the date you'd like — at least 3 days out.</div></li>
+			<li><span>3</span><div><strong>Erin confirms</strong> your order by text or email.</div></li>
+			<li><span>4</span><div><strong>Pay after confirmation</strong> by PayPal, Venmo, CashApp, Zelle, Cash, or Check.</div></li>
+		</ol>
+		<p class="cta"><a class="btn-primary" href="/products">View Menu</a></p>
+	</section>
+</Base>
+
+<style>
+	.how { padding: 4rem 1rem; max-width: 40rem; margin: 0 auto; }
+	.steps { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1.25rem; }
+	.steps li { display: flex; gap: 1rem; align-items: flex-start; }
+	.steps span {
+		flex: none;
+		width: 2.25rem;
+		height: 2.25rem;
+		border-radius: 999px;
+		background: var(--accent);
+		color: #fff;
+		font-weight: 700;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.steps div { padding-top: 0.35rem; color: #4b5563; }
+	.steps strong { color: var(--brown); }
+	.cta { text-align: center; margin-top: 2.5rem; }
+</style>

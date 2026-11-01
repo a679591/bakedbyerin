@@ -1,0 +1,390 @@
+---
+import { getEmDashCollection } from "emdash";
+import Base from "../../layouts/Base.astro";
+import { MIN_GROUPS, parseMixins } from "../../lib/menu-rules";
+
+const { entries: products, cacheHint } = await getEmDashCollection("products", {
+	status: "published",
+	limit: 100,
+});
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+
+// Current catalog, so the cart always shows today's prices and drops anything no longer offered.
+const catalog = products.map((p) => ({
+	slug: p.id,
+	title: p.data.title,
+	price: p.data.price,
+	price_large: typeof p.data.price_large === "number" && p.data.price_large > 0 ? p.data.price_large : null,
+	mixins: parseMixins(p.data.mixins).choices,
+	mixinsOptional: parseMixins(p.data.mixins).optional,
+	category: p.data.terms?.category?.[0]?.slug ?? null,
+	available: p.data.available !== false,
+}));
+// Minimum-quantity rules for the browser (the "match" functions stay on the server side).
+const minGroups = MIN_GROUPS.map((g) => ({ key: g.key, min: g.min, label: g.label }));
+
+const DELIVERY_FEE = 10;
+// Orders need this many days' notice (order on Nov 1 → earliest Nov 4). Keep in sync with api/orders.ts.
+const LEAD_DAYS = 3;
+// Erin's existing Formspree form, so order emails keep arriving the way they do today.
+const FORMSPREE_URL = "https://formspree.io/f/xyknvwqq";
+---
+
+<Base title="Cart" description="Review your order and check out." textured>
+	<section class="checkout">
+		<h1 class="section-heading">Your Cart</h1>
+
+		<div class="panel" id="cart-panel">
+			<p class="empty" id="cart-empty" hidden>
+				Your cart is empty. <a href="/products">Browse the menu →</a>
+			</p>
+			<ul class="lines" id="cart-lines"></ul>
+			<div class="totals" id="cart-totals" hidden>
+				<div><span>Subtotal</span><span id="subtotal">$0</span></div>
+				<div id="delivery-row" hidden><span>Delivery</span><span>${DELIVERY_FEE}</span></div>
+				<div class="grand"><span>Total</span><span id="grand-total">$0</span></div>
+			</div>
+			<p class="removed" id="cart-removed" hidden></p>
+			<p class="min-warning" id="min-warning" role="status" hidden></p>
+		</div>
+
+		<form id="order-form" class="panel form" novalidate hidden>
+			<h2>Checkout</h2>
+
+			<label>Name *
+				<input name="customer_name" required autocomplete="name" />
+			</label>
+			<label>Phone *
+				<input name="customer_phone" type="tel" required autocomplete="tel" />
+			</label>
+			<label>Email
+				<input name="customer_email" type="email" autocomplete="email" />
+			</label>
+
+			<fieldset class="choice">
+				<legend>Pickup or delivery? *</legend>
+				<label class="radio"><input type="radio" name="fulfillment" value="pickup" checked /> Pickup (free)</label>
+				<label class="radio"><input type="radio" name="fulfillment" value="delivery" /> Delivery in Miami (+${DELIVERY_FEE})</label>
+			</fieldset>
+
+			<label id="address-field" hidden>Delivery address *
+				<textarea name="delivery_address" rows="2" autocomplete="street-address"></textarea>
+			</label>
+
+			<label>Requested pickup / delivery date *
+				<input name="pickup_date" type="date" required />
+				<span class="hint" id="date-hint">Orders need at least {LEAD_DAYS} days' notice.</span>
+			</label>
+
+			<label>Notes (allergies, special requests, gift messages)
+				<textarea name="notes" rows="3"></textarea>
+			</label>
+
+			<div class="payment">
+				<strong>Payment:</strong> Pay by PayPal, Venmo, CashApp, Zelle, Cash, or Check after Erin confirms your order.
+			</div>
+
+			<button type="submit" class="btn-primary submit" id="submit-btn">Place Order</button>
+			<p class="form-error" id="form-error" role="alert" hidden></p>
+		</form>
+	</section>
+</Base>
+
+<script type="application/json" id="catalog-data" set:html={JSON.stringify(catalog)}></script>
+<script type="application/json" id="min-groups" set:html={JSON.stringify(minGroups)}></script>
+
+<script is:inline define:vars={{ DELIVERY_FEE, FORMSPREE_URL, LEAD_DAYS }}>
+	(function () {
+		var catalog = JSON.parse(document.getElementById("catalog-data").textContent || "[]");
+		var bySlug = {};
+		catalog.forEach(function (p) { bySlug[p.slug] = p; });
+
+		var linesEl = document.getElementById("cart-lines");
+		var emptyEl = document.getElementById("cart-empty");
+		var totalsEl = document.getElementById("cart-totals");
+		var removedEl = document.getElementById("cart-removed");
+		var form = document.getElementById("order-form");
+		var deliveryRow = document.getElementById("delivery-row");
+		var addressField = document.getElementById("address-field");
+
+		function money(n) { return "$" + (Number.isInteger(n) ? n : n.toFixed(2)); }
+		function priceFor(item) {
+			var p = bySlug[item.slug];
+			if (!p) return null;
+			return item.size === "Large" && p.price_large ? p.price_large : p.price;
+		}
+		function label(item) {
+			var bits = [];
+			if (item.size) bits.push(item.size);
+			if (item.mixin) bits.push(item.mixin);
+			return item.title + (bits.length ? " (" + bits.join(", ") + ")" : "");
+		}
+		function isDelivery() {
+			var r = form.querySelector('input[name="fulfillment"]:checked');
+			return r && r.value === "delivery";
+		}
+
+		// Drop anything that's no longer on the menu (sold out, removed, or a size/mix-in that changed).
+		var removed = [];
+		var items = window.bbeCart.read().filter(function (i) {
+			var p = bySlug[i.slug];
+			var ok = p && p.available &&
+				(!i.size || i.size === "Small" || (i.size === "Large" && p.price_large)) &&
+				(!i.mixin || p.mixins.indexOf(i.mixin) !== -1) &&
+				(p.mixins.length === 0 || p.mixinsOptional || i.mixin);
+			if (!ok) removed.push(i.title);
+			return ok;
+		});
+		if (removed.length) {
+			window.bbeCart.write(items);
+			removedEl.textContent = "Removed (no longer available): " + removed.join(", ");
+			removedEl.hidden = false;
+		}
+
+		// Minimums (same rule as src/lib/menu-rules.ts): a group's minimum only applies
+		// when the whole cart is made of that group.
+		var minGroups = JSON.parse(document.getElementById("min-groups").textContent || "[]");
+		function groupKey(item) {
+			var p = bySlug[item.slug];
+			if (item.size === "Small") return "mini";
+			if (p && p.category === "granola") return "granola";
+			return null;
+		}
+		function minimumProblem() {
+			if (items.length === 0) return null;
+			var keys = items.map(groupKey);
+			var first = keys[0];
+			if (!first || keys.some(function (k) { return k !== first; })) return null;
+			var g = minGroups.find(function (x) { return x.key === first; });
+			if (!g) return null;
+			var total = items.reduce(function (n, i) { return n + i.qty; }, 0);
+			if (total >= g.min) return null;
+			return "There's a minimum of " + g.min + " " + g.label + " per order, unless you add something else to your cart.";
+		}
+
+		function render() {
+			linesEl.innerHTML = "";
+			var subtotal = 0;
+			items.forEach(function (item, idx) {
+				var unit = priceFor(item);
+				subtotal += unit * item.qty;
+				var li = document.createElement("li");
+				li.className = "line";
+				li.innerHTML =
+					'<div class="line-name"></div>' +
+					'<div class="qty">' +
+						'<button type="button" class="qty-btn" data-act="dec" aria-label="One less">−</button>' +
+						'<span class="qty-n"></span>' +
+						'<button type="button" class="qty-btn" data-act="inc" aria-label="One more">+</button>' +
+					'</div>' +
+					'<div class="line-total"></div>' +
+					'<button type="button" class="remove" data-act="rm" aria-label="Remove">✕</button>';
+				li.querySelector(".line-name").textContent = label(item);
+				li.querySelector(".qty-n").textContent = item.qty;
+				li.querySelector(".line-total").textContent = money(unit * item.qty);
+				li.querySelectorAll("button").forEach(function (b) {
+					b.addEventListener("click", function () {
+						if (b.dataset.act === "inc") item.qty = Math.min(item.qty + 1, 99);
+						if (b.dataset.act === "dec") item.qty -= 1;
+						if (b.dataset.act === "rm" || item.qty <= 0) items.splice(idx, 1);
+						window.bbeCart.write(items);
+						render();
+					});
+				});
+				linesEl.appendChild(li);
+			});
+
+			var empty = items.length === 0;
+			emptyEl.hidden = !empty;
+			totalsEl.hidden = empty;
+			form.hidden = empty;
+			var fee = isDelivery() ? DELIVERY_FEE : 0;
+			deliveryRow.hidden = fee === 0;
+			addressField.hidden = fee === 0;
+			var problem = minimumProblem();
+			var warnEl = document.getElementById("min-warning");
+			warnEl.textContent = problem || "";
+			warnEl.hidden = !problem;
+			document.getElementById("subtotal").textContent = money(subtotal);
+			document.getElementById("grand-total").textContent = money(subtotal + fee);
+		}
+
+		form.querySelectorAll('input[name="fulfillment"]').forEach(function (r) { r.addEventListener("change", render); });
+
+		// Earliest date: today (Miami time) + LEAD_DAYS. The server enforces the same rule.
+		var dateInput = form.querySelector('input[name="pickup_date"]');
+		var todayMiami = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York" }).format(new Date());
+		var earliest = new Date(todayMiami + "T12:00:00Z");
+		earliest.setUTCDate(earliest.getUTCDate() + LEAD_DAYS);
+		var minDate = earliest.toISOString().slice(0, 10);
+		dateInput.min = minDate;
+		document.getElementById("date-hint").textContent =
+			"Orders need at least " + LEAD_DAYS + " days' notice. Earliest available: " +
+			earliest.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", timeZone: "UTC" }) + ".";
+
+		render();
+
+		form.addEventListener("submit", async function (e) {
+			e.preventDefault();
+			var errEl = document.getElementById("form-error");
+			var btn = document.getElementById("submit-btn");
+			errEl.hidden = true;
+			var fd = new FormData(form);
+
+			var problem = minimumProblem();
+			if (problem) {
+				errEl.textContent = problem;
+				errEl.hidden = false;
+				return;
+			}
+
+			var missing = [];
+			if (!String(fd.get("customer_name") || "").trim()) missing.push("name");
+			if (!String(fd.get("customer_phone") || "").trim()) missing.push("phone");
+			if (!fd.get("pickup_date")) missing.push("date");
+			else if (String(fd.get("pickup_date")) < minDate) {
+				errEl.textContent = "Orders need at least " + LEAD_DAYS + " days' notice. Please choose " + dateInput.min.slice(5).replace("-", "/") + " or later.";
+				errEl.hidden = false;
+				return;
+			}
+			if (isDelivery() && !String(fd.get("delivery_address") || "").trim()) missing.push("delivery address");
+			if (missing.length) {
+				errEl.textContent = "Please fill in your " + missing.join(", ") + ".";
+				errEl.hidden = false;
+				return;
+			}
+
+			var payload = {
+				customer_name: fd.get("customer_name"),
+				customer_phone: fd.get("customer_phone"),
+				customer_email: fd.get("customer_email"),
+				fulfillment: fd.get("fulfillment"),
+				delivery_address: fd.get("delivery_address"),
+				pickup_date: fd.get("pickup_date"),
+				notes: fd.get("notes"),
+				items: items.map(function (i) { return { product: i.slug, size: i.size || "", mixin: i.mixin || "", quantity: i.qty }; }),
+			};
+
+			btn.disabled = true;
+			btn.textContent = "Placing order…";
+			try {
+				var res = await fetch("/api/orders", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(payload),
+				});
+				var data = await res.json().catch(function () { return {}; });
+				if (!res.ok || !data.ok) throw new Error(data.error || "Could not place the order. Please try again.");
+
+				// Email Erin through her existing Formspree form (best effort — the order is already saved).
+				try {
+					var o = data.order;
+					var ctrl = new AbortController();
+					setTimeout(function () { ctrl.abort(); }, 5000);
+					await fetch(FORMSPREE_URL, {
+						method: "POST",
+						headers: { "Content-Type": "application/json", Accept: "application/json" },
+						signal: ctrl.signal,
+						body: JSON.stringify({
+							_subject: "New order from " + o.customer_name,
+							"Order Ref": data.id,
+							Name: o.customer_name,
+							Phone: o.customer_phone,
+							Email: o.customer_email || "",
+							_replyto: o.customer_email || undefined,
+							"Pickup or Delivery": o.fulfillment,
+							"Delivery Address": o.delivery_address || "",
+							"Requested Date": o.requested_date,
+							Items: o.items.map(function (i) { return i.quantity + " × " + i.product + (i.size ? " (" + i.size + (i.mixin ? ", " + i.mixin : "") + ")" : (i.mixin ? " (" + i.mixin + ")" : "")) + " — $" + (i.unit_price * i.quantity); }).join("\n"),
+							"Delivery Fee": "$" + o.delivery_fee,
+							Total: "$" + o.total,
+							Notes: o.notes || "",
+						}),
+					});
+				} catch (mailErr) { /* order is saved in the admin either way */ }
+
+				window.bbeCart.write([]);
+				window.location.href = "/order/confirmation/" + data.id;
+			} catch (err) {
+				errEl.textContent = err.message;
+				errEl.hidden = false;
+				btn.disabled = false;
+				btn.textContent = "Place Order";
+			}
+		});
+	})();
+</script>
+
+<style>
+	.checkout { padding: 4rem 1rem; max-width: 40rem; margin: 0 auto; }
+	.panel {
+		background: #fff;
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+		padding: 1.5rem;
+		margin-bottom: 1.5rem;
+	}
+	.panel[hidden] { display: none; }
+	.empty { text-align: center; margin: 0; color: var(--muted); }
+	.lines { list-style: none; margin: 0; padding: 0; }
+	.lines :global(.line) {
+		display: grid;
+		grid-template-columns: 1fr auto auto auto;
+		gap: 0.75rem;
+		align-items: center;
+		padding: 0.75rem 0;
+		border-bottom: 1px solid var(--border);
+	}
+	.lines :global(.line-name) { font-weight: 600; color: var(--brown); }
+	.lines :global(.qty) { display: flex; align-items: center; gap: 0.5rem; }
+	.lines :global(.qty-btn) {
+		width: 28px;
+		height: 28px;
+		border-radius: 999px;
+		border: 2px solid var(--brown);
+		background: #fff;
+		color: var(--brown);
+		font-weight: 700;
+		cursor: pointer;
+		line-height: 1;
+	}
+	.lines :global(.qty-n) { min-width: 1.25rem; text-align: center; font-weight: 600; }
+	.lines :global(.line-total) { font-weight: 600; min-width: 3.5rem; text-align: right; }
+	.lines :global(.remove) { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; }
+	.totals { margin-top: 1rem; }
+	.totals > div { display: flex; justify-content: space-between; padding: 0.25rem 0; color: #4b5563; }
+	.totals > div[hidden] { display: none; }
+	.totals .grand { font-weight: 700; font-size: 1.15rem; color: var(--fg); border-top: 1px solid var(--border); margin-top: 0.5rem; padding-top: 0.75rem; }
+	.min-warning { background: #fef3c7; color: #92400e; border-radius: 6px; padding: 0.75rem 1rem; margin: 1rem 0 0; font-weight: 600; font-size: 0.9rem; }
+	.min-warning[hidden] { display: none; }
+	.removed { color: #b45309; font-size: 0.9rem; margin: 1rem 0 0; }
+	.form h2 { margin: 0 0 1rem; color: var(--brown); text-transform: uppercase; letter-spacing: 0.05em; font-size: 1.25rem; }
+	.form > label, .form label:not(.radio) { display: block; margin-bottom: 1rem; font-weight: 600; font-size: 0.9rem; }
+	.form label[hidden] { display: none; }
+	input:not([type="radio"]), textarea {
+		display: block;
+		width: 100%;
+		margin-top: 0.35rem;
+		padding: 0.6rem 0.75rem;
+		border: 1px solid #d1d5db;
+		border-radius: 6px;
+		font: inherit;
+		font-weight: 400;
+		background: #fff;
+	}
+	input:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
+	.choice { border: none; padding: 0; margin: 0 0 1rem; }
+	.choice legend { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; padding: 0; }
+	.radio { display: flex; align-items: center; gap: 0.5rem; font-weight: 400; margin-bottom: 0.4rem; cursor: pointer; }
+	.radio input { accent-color: var(--brown); width: 18px; height: 18px; }
+	.hint { display: block; font-weight: 400; font-size: 0.8rem; color: var(--muted); margin-top: 0.35rem; }
+	.payment { background: var(--soft); border-radius: 6px; padding: 0.85rem 1rem; margin-bottom: 1.25rem; font-size: 0.9rem; }
+	.submit { width: 100%; }
+	.form-error { color: #b91c1c; margin: 0.75rem 0 0; font-weight: 600; }
+	.form-error[hidden] { display: none; }
+	@media (max-width: 480px) {
+		.lines :global(.line) { grid-template-columns: 1fr auto; }
+		.lines :global(.line-name) { grid-column: 1 / -1; }
+	}
+</style>
