@@ -120,8 +120,10 @@ First switch-over:
 
 Customers add items to a cart (sizes and mix-ins included), choose pickup or
 Miami delivery (+$10), and check out at `/order`. `POST /api/orders` recalculates
-every price on the server and saves the order in the EmDash `orders` collection,
-and the browser also sends Erin the usual Formspree email. Payment (PayPal,
+every price on the server, saves the order in the EmDash `orders` collection,
+and emails it to Erin through her Formspree form (the customer's email is required
+and sent as Formspree's `email` field, so Erin can reply directly). Check
+`npx wrangler tail` for "Formspree accepted/rejected order …" if an email is missing. Payment (PayPal,
 Venmo, CashApp, Zelle, cash or check) happens after Erin confirms. Update
 `order_status` in the admin as orders move along.
 
