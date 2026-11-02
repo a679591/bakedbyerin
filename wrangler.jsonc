@@ -44,7 +44,11 @@
 	],
 	// Astro session storage (logins). ID filled in by setup.ps1.
 	"kv_namespaces": [{ "binding": "SESSION", "id": "3444a094a9614deaa53c2bbaaad68326" }],
-	"vars": { "EMDASH_SITE_URL": "https://bakedbyerin.com" },
+	// EMDASH_ALLOWED_ORIGINS lets passkeys (made for bakedbyerin.com) also work on www. and shop.
+	"vars": {
+		"EMDASH_SITE_URL": "https://bakedbyerin.com",
+		"EMDASH_ALLOWED_ORIGINS": "https://www.bakedbyerin.com,https://shop.bakedbyerin.com"
+	},
 
 	// Scheduled publishing + maintenance sweep (1/min).
 	"triggers": { "crons": ["* * * * *"] },
