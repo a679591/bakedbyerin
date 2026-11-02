@@ -9,8 +9,10 @@ interface Props {
 	showImage?: boolean;
 	/** Link the title to the product page. */
 	linkTitle?: boolean;
+	/** Show the ingredients list expanded (product page) instead of tucked away (menu). */
+	ingredientsOpen?: boolean;
 }
-const { product, showImage = true, linkTitle = true } = Astro.props;
+const { product, showImage = true, linkTitle = true, ingredientsOpen = false } = Astro.props;
 const d = product.data;
 
 const money = (n: number) => `$${Number.isInteger(n) ? n : n.toFixed(2)}`;
@@ -30,6 +32,9 @@ const { choices, optional: mixinsOptional } = parseMixins(d.mixins);
 const mixins: string[] = mixinsOptional ? [] : choices;
 const addons: string[] = mixinsOptional ? choices : [];
 const available = d.available !== false;
+// Filled in by Erin in the admin (Products → Ingredients / Allergens). Nothing shows until they're set.
+const ingredients = typeof d.ingredients === "string" ? d.ingredients.trim() : "";
+const allergens = typeof d.allergens === "string" ? d.allergens.trim() : "";
 const href = `/products/${product.id}`;
 ---
 
@@ -60,6 +65,17 @@ const href = `/products/${product.id}`;
 		<ul class="highlights" {...product.edit.highlights}>
 			{highlights.map((h) => <li>• {h}</li>)}
 		</ul>
+	)}
+
+	{allergens && (
+		<p class="contains" {...product.edit.allergens}><strong>Contains:</strong> {allergens}</p>
+	)}
+
+	{ingredients && (
+		<details class="ingredients" open={ingredientsOpen}>
+			<summary>Ingredients</summary>
+			<p {...product.edit.ingredients}>{ingredients}</p>
+		</details>
 	)}
 
 	{!available ? (
@@ -177,6 +193,19 @@ const href = `/products/${product.id}`;
 	.add-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 	.mixin-prompt { font-size: 0.875rem; color: #9ca3af; margin: 0.75rem 0 0; }
 	.mixin-prompt[hidden] { display: none; }
+	.contains {
+		margin: 0.75rem 0 0;
+		padding: 0.5rem 0.75rem;
+		background: #fff7ed;
+		border: 1px solid #fed7aa;
+		border-radius: 4px;
+		color: #9a3412;
+		font-size: 0.875rem;
+		text-align: left;
+	}
+	.ingredients { margin: 0.75rem 0 0; text-align: left; font-size: 0.875rem; color: #4b5563; }
+	.ingredients summary { cursor: pointer; font-weight: 600; color: var(--brown); padding: 0.25rem 0; }
+	.ingredients p { margin: 0.35rem 0 0; white-space: pre-line; line-height: 1.5; }
 	.unavailable { margin: 1rem 0 0; color: var(--muted); font-style: italic; }
 	@media (max-width: 480px) {
 		.add-row { flex-direction: column; }

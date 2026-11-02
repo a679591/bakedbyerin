@@ -134,6 +134,12 @@ optional large-size price, highlights (one per line), mix-ins, a menu order
 number, a photo, and an Available switch — turn that off for out-of-season items
 like the Passover menu.
 
+Ingredients and allergens: two product fields, **Ingredients** (`ingredients`, long
+text) and **Allergens** (`allergens`, e.g. "Wheat, Eggs, Milk, Walnuts"). Allergens
+show as a "Contains:" line on every card; ingredients sit in a fold-out on the menu
+and are open on the product page. They were added after the first setup, so on the
+live site they're created once in the admin under Content types → Products.
+
 Mix-ins field:
 - `Chocolate Chips, Peanut Butter Cups, Oreos` — the customer must pick one.
 - `optional: Chocolate Chips` — a free add-on button the customer can skip.

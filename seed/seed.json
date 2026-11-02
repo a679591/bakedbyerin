@@ -41,6 +41,17 @@
 					"type": "text"
 				},
 				{
+					"slug": "ingredients",
+					"label": "Ingredients",
+					"type": "text",
+					"searchable": true
+				},
+				{
+					"slug": "allergens",
+					"label": "Allergens (e.g. Wheat, Eggs, Milk, Walnuts)",
+					"type": "string"
+				},
+				{
 					"slug": "mixins",
 					"label": "Mix-ins: \"A, B\" = customer must pick one; \"optional: A\" = free add-on they can skip",
 					"type": "string"
