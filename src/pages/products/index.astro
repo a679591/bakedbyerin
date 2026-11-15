@@ -40,6 +40,7 @@ const labelFor = (slug: string) => terms.find((t) => t.slug === slug)?.label ?? 
 const heading =
 	activeCategory === "seasonal" ? "Our Special Menu" :
 	activeCategory === "passover" ? "Passover Menu" :
+	activeCategory === "holiday" ? "Holiday Specials" :
 	activeTerm ? activeTerm.label : "Our Menu";
 ---
 

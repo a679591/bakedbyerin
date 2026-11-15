@@ -134,6 +134,11 @@ optional large-size price, highlights (one per line), mix-ins, a menu order
 number, a photo, and an Available switch — turn that off for out-of-season items
 like the Passover menu.
 
+Holiday page (`/holiday`, `src/pages/holiday.astro`): shows the **Holiday** category
+("Holiday Specials") and the **Passover** category as sections. Put a product in
+either category in the admin to list it there; add more sections in the `SECTIONS`
+list at the top of that file.
+
 Ingredients and allergens: two product fields, **Ingredients** (`ingredients`, long
 text) and **Allergens** (`allergens`, e.g. "Wheat, Eggs, Milk, Walnuts"). Allergens
 show as a "Contains:" line on every card; ingredients sit in a fold-out on the menu

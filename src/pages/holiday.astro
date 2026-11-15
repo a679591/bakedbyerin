@@ -1,0 +1,79 @@
+---
+import { getEmDashCollection } from "emdash";
+import Base from "../layouts/Base.astro";
+import ProductCard from "../components/ProductCard.astro";
+
+// The Holiday page groups several product categories into sections, in this order.
+// To add another holiday later (e.g. "Christmas"), create the category in the admin
+// and add a line here.
+const SECTIONS = [
+	{ slug: "holiday", title: "Holiday Specials" },
+	{ slug: "passover", title: "Passover" },
+];
+
+const { entries: products, cacheHint } = await getEmDashCollection("products", {
+	status: "published",
+	limit: 100,
+});
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+
+const sorted = [...products].sort((a, b) => (a.data.sort_order ?? 999) - (b.data.sort_order ?? 999));
+const inCategory = (slug: string) =>
+	sorted.filter((p) => (p.data.terms?.category ?? []).some((t) => t.slug === slug));
+const sections = SECTIONS.map((s) => ({ ...s, items: inCategory(s.slug) })).filter((s) => s.items.length > 0);
+---
+
+<Base title="Holiday Menu" description="Holiday specials, bundles and Passover treats from Baked by Erin." textured>
+	<section class="holiday">
+		<h1 class="section-heading">Holiday Menu</h1>
+
+		{sections.length > 0 && (
+			<nav class="jump" aria-label="Holiday sections">
+				{sections.map((s) => <a href={`#${s.slug}`}>{s.title}</a>)}
+			</nav>
+		)}
+
+		{sections.length === 0 ? (
+			<p class="empty">Holiday treats are coming soon — check back!</p>
+		) : (
+			sections.map((s) => (
+				<section class="group" id={s.slug}>
+					<h2>{s.title}</h2>
+					<div class="list">
+						{s.items.map((p) => <ProductCard product={p} />)}
+					</div>
+				</section>
+			))
+		)}
+
+		<p class="note">Holiday orders need at least 3 days' notice. <a href="/how-to-order">How ordering works</a></p>
+	</section>
+</Base>
+
+<style>
+	.holiday { padding: 4rem 1rem; max-width: 48rem; margin: 0 auto; }
+	.jump { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.5rem; margin: -1rem 0 2.5rem; }
+	.jump a {
+		padding: 0.4rem 1rem;
+		border-radius: 999px;
+		border: 2px solid var(--brown);
+		color: var(--brown);
+		background: #fff;
+		font-weight: 600;
+		font-size: 0.9rem;
+		text-decoration: none;
+	}
+	.jump a:hover { background: var(--brown); color: #fff; }
+	.group { margin-bottom: 3rem; scroll-margin-top: 5rem; }
+	.group h2 {
+		font-size: 1.25rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--brown);
+		text-align: center;
+		margin: 0 0 1.25rem;
+	}
+	.list { display: flex; flex-direction: column; gap: 3rem; }
+	.empty, .note { text-align: center; color: var(--muted); background: #fff; padding: 1.25rem; border-radius: var(--radius); }
+	.note a { color: var(--accent); }
+</style>

@@ -265,6 +265,10 @@
 					"label": "Seasonal"
 				},
 				{
+					"slug": "holiday",
+					"label": "Holiday"
+				},
+				{
 					"slug": "passover",
 					"label": "Passover"
 				}
@@ -293,8 +297,8 @@
 				},
 				{
 					"type": "custom",
-					"label": "Passover",
-					"url": "/products?category=passover"
+					"label": "Holiday",
+					"url": "/holiday"
 				},
 				{
 					"type": "custom",
@@ -648,6 +652,33 @@
 				"taxonomies": {
 					"category": [
 						"passover"
+					]
+				}
+			},
+			{
+				"id": "product-holiday-mini-banana-espresso-5-pack",
+				"slug": "holiday-mini-banana-espresso-5-pack",
+				"status": "published",
+				"data": {
+					"title": "Holiday 5-Pack: Mini Banana Espresso Breads",
+					"summary": "Five tiny banana espresso breads — perfect for gifting or sharing over the holidays",
+					"highlights": "5 mini loaves\nGreat for gifts & parties\nAdd chocolate chips for free",
+					"price": 25,
+					"unit": "box",
+					"available": true,
+					"sort_order": 5,
+					"mixins": "optional: Chocolate Chips",
+					"featured_image": {
+						"$media": {
+							"url": "https://bakedbyerin.com/images/banana-bread-plain.jpeg",
+							"alt": "Banana Espresso Bread",
+							"filename": "banana-bread-plain.jpeg"
+						}
+					}
+				},
+				"taxonomies": {
+					"category": [
+						"holiday"
 					]
 				}
 			}
