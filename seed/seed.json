@@ -236,6 +236,34 @@
 					}
 				}
 			]
+		},
+		{
+			"slug": "reviews",
+			"label": "Reviews",
+			"labelSingular": "Review",
+			"supports": [
+				"drafts"
+			],
+			"fields": [
+				{
+					"slug": "reviewer_name",
+					"label": "Name",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "items_ordered",
+					"label": "Items ordered",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "review",
+					"label": "Review",
+					"type": "text",
+					"required": true
+				}
+			]
 		}
 	],
 	"taxonomies": [
@@ -294,6 +322,11 @@
 					"type": "custom",
 					"label": "Holiday",
 					"url": "/holiday"
+				},
+				{
+					"type": "custom",
+					"label": "Reviews",
+					"url": "/reviews"
 				},
 				{
 					"type": "custom",

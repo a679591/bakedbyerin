@@ -16,16 +16,23 @@ if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
 const sorted = [...products].sort((a, b) => (a.data.sort_order ?? 999) - (b.data.sort_order ?? 999));
 const inCategory = (slug: string) =>
 	sorted.filter((p) => (p.data.terms?.category ?? []).some((t) => t.slug === slug));
-const sections = SECTIONS.map((s) => ({ ...s, items: inCategory(s.slug) })).filter((s) => s.items.length > 0);
+const allSections = SECTIONS.map((s) => ({ ...s, items: inCategory(s.slug) })).filter((s) => s.items.length > 0);
+// Tabs: "All" shows every section; ?section=<slug> shows just one.
+const active = Astro.url.searchParams.get("section");
+const activeSection = allSections.find((s) => s.slug === active);
+const sections = activeSection ? [activeSection] : allSections;
 ---
 
 <Base title="Holiday Menu" description="Passover treats, holiday bundles and summer refreshers from Baked by Erin." textured>
 	<section class="holiday">
 		<h1 class="section-heading">Holiday Menu</h1>
 
-		{sections.length > 0 && (
+		{allSections.length > 0 && (
 			<nav class="jump" aria-label="Holiday sections">
-				{sections.map((s) => <a href={`#${s.slug}`}>{s.title}</a>)}
+				<a href="/holiday" class={!activeSection ? "active" : ""}>All</a>
+				{allSections.map((s) => (
+					<a href={`/holiday?section=${s.slug}`} class={activeSection?.slug === s.slug ? "active" : ""}>{s.title}</a>
+				))}
 			</nav>
 		)}
 
@@ -59,7 +66,7 @@ const sections = SECTIONS.map((s) => ({ ...s, items: inCategory(s.slug) })).filt
 		font-size: 0.9rem;
 		text-decoration: none;
 	}
-	.jump a:hover { background: var(--brown); color: #fff; }
+	.jump a:hover, .jump a.active { background: var(--brown); color: #fff; }
 	.group { margin-bottom: 3rem; scroll-margin-top: 5rem; }
 	.group h2 {
 		font-size: 1.25rem;

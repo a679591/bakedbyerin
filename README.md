@@ -140,6 +140,14 @@ Holiday page (`/holiday`) vs. Menu page (`/products`): the categories listed in
 the main Menu page, its filter buttons and the homepage favorites. Everything else
 is the regular menu, grouped by category and ordered by each product's Menu order.
 
+The Holiday page has tabs: **All** plus one per section (`/holiday?section=holiday`, etc.).
+
+Reviews (`/reviews`): customers submit name, items ordered and a review of at least
+15 words. `POST /api/reviews` saves it as a **draft** in the `reviews` collection;
+Erin publishes it in the admin to show it on the page. The collection was added after
+the first setup, so on the live site it's created once in the admin under Content
+types (slug `reviews`, fields `reviewer_name`, `items_ordered`, `review`).
+
 Ingredients and allergens: two product fields, **Ingredients** (`ingredients`, long
 text) and **Allergens** (`allergens`, e.g. "Wheat, Eggs, Milk, Walnuts"). Allergens
 show as a "Contains:" line on every card; ingredients sit in a fold-out on the menu

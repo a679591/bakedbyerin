@@ -1,0 +1,157 @@
+---
+import { getEmDashCollection } from "emdash";
+import Base from "../layouts/Base.astro";
+
+const MIN_WORDS = 15; // keep in sync with src/pages/api/reviews.ts
+
+// Only PUBLISHED reviews show here. New submissions are drafts until Erin approves them.
+let reviews: any[] = [];
+try {
+	const { entries, cacheHint } = await getEmDashCollection("reviews", { status: "published", limit: 100 });
+	if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+	reviews = entries;
+} catch (err) {
+	// The "reviews" content type hasn't been created in the admin yet.
+	console.error(`Reviews unavailable: ${(err as Error).message}`);
+}
+
+// Product names to suggest in the "What did you order?" box.
+let productNames: string[] = [];
+try {
+	const { entries } = await getEmDashCollection("products", { status: "published", limit: 100 });
+	productNames = entries.map((p) => p.data.title).filter(Boolean);
+} catch {
+	/* suggestions are optional */
+}
+---
+
+<Base title="Reviews" description="What customers say about Baked by Erin, and leave your own review." textured>
+	<section class="reviews">
+		<h1 class="section-heading">Reviews</h1>
+
+		{reviews.length === 0 ? (
+			<p class="empty">No reviews yet. Be the first to share what you thought!</p>
+		) : (
+			<ul class="list">
+				{reviews.map((r) => (
+					<li class="review">
+						<blockquote>“{r.data.review}”</blockquote>
+						<p class="who">
+							<strong>{r.data.reviewer_name}</strong>
+							{r.data.items_ordered && <span> · ordered {r.data.items_ordered}</span>}
+						</p>
+					</li>
+				))}
+			</ul>
+		)}
+
+		<form id="review-form" class="panel" novalidate>
+			<h2>Leave a Review</h2>
+			<p class="intro">Reviews are read by Erin before they appear on this page.</p>
+
+			<label>Your name *
+				<input name="reviewer_name" required maxlength="80" autocomplete="name" />
+			</label>
+
+			<label>What did you order? *
+				<input name="items_ordered" required maxlength="300" list="product-names" placeholder="e.g. Banana Espresso Bread" />
+				<datalist id="product-names">
+					{productNames.map((n) => <option value={n} />)}
+				</datalist>
+			</label>
+
+			<label>Your review * <span class="count" id="word-count">0 / {MIN_WORDS} words</span>
+				<textarea name="review" rows="5" required maxlength="3000"></textarea>
+			</label>
+
+			<!-- Hidden from people; bots fill it in. -->
+			<label class="hp" aria-hidden="true">Website <input name="website" tabindex="-1" autocomplete="off" /></label>
+
+			<button type="submit" class="btn-primary submit" id="review-submit">Submit Review</button>
+			<p class="msg" id="review-msg" role="status" hidden></p>
+		</form>
+	</section>
+</Base>
+
+<script is:inline define:vars={{ MIN_WORDS }}>
+	(function () {
+		var form = document.getElementById("review-form");
+		var countEl = document.getElementById("word-count");
+		var msg = document.getElementById("review-msg");
+		var btn = document.getElementById("review-submit");
+		var textarea = form.querySelector('textarea[name="review"]');
+		function words() { return textarea.value.trim().split(/\s+/).filter(Boolean).length; }
+		function show(text, ok) { msg.textContent = text; msg.className = "msg " + (ok ? "ok" : "err"); msg.hidden = false; }
+		textarea.addEventListener("input", function () {
+			var n = words();
+			countEl.textContent = n + " / " + MIN_WORDS + " words";
+			countEl.classList.toggle("done", n >= MIN_WORDS);
+		});
+		form.addEventListener("submit", async function (e) {
+			e.preventDefault();
+			var fd = new FormData(form);
+			if (!String(fd.get("reviewer_name") || "").trim()) return show("Please add your name.");
+			if (!String(fd.get("items_ordered") || "").trim()) return show("Please tell us what you ordered.");
+			if (words() < MIN_WORDS) return show("Reviews need at least " + MIN_WORDS + " words (you have " + words() + ").");
+			btn.disabled = true;
+			btn.textContent = "Sending…";
+			try {
+				var res = await fetch("/api/reviews", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						reviewer_name: fd.get("reviewer_name"),
+						items_ordered: fd.get("items_ordered"),
+						review: fd.get("review"),
+						website: fd.get("website"),
+					}),
+				});
+				var data = await res.json().catch(function () { return {}; });
+				if (!res.ok || !data.ok) throw new Error(data.error || "Something went wrong. Please try again.");
+				form.reset();
+				countEl.textContent = "0 / " + MIN_WORDS + " words";
+				countEl.classList.remove("done");
+				show("Thank you! Your review was sent to Erin and will appear here once it's approved.", true);
+			} catch (err) {
+				show(err.message);
+			} finally {
+				btn.disabled = false;
+				btn.textContent = "Submit Review";
+			}
+		});
+	})();
+</script>
+
+<style>
+	.reviews { padding: 4rem 1rem; max-width: 44rem; margin: 0 auto; }
+	.empty { text-align: center; color: var(--muted); background: #fff; padding: 1.5rem; border-radius: var(--radius); margin: 0 0 2rem; }
+	.list { list-style: none; padding: 0; margin: 0 0 2.5rem; display: flex; flex-direction: column; gap: 1.25rem; }
+	.review { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); padding: 1.25rem 1.5rem; }
+	.review blockquote { margin: 0 0 0.75rem; font-size: 1.05rem; line-height: 1.6; color: var(--fg); }
+	.who { margin: 0; color: var(--muted); font-size: 0.9rem; }
+	.who strong { color: var(--brown); }
+	.panel { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); padding: 1.5rem; }
+	.panel h2 { margin: 0 0 0.25rem; color: var(--brown); text-transform: uppercase; letter-spacing: 0.05em; font-size: 1.25rem; }
+	.intro { margin: 0 0 1.25rem; color: var(--muted); font-size: 0.9rem; }
+	label { display: block; margin-bottom: 1rem; font-weight: 600; font-size: 0.9rem; }
+	input, textarea {
+		display: block;
+		width: 100%;
+		margin-top: 0.35rem;
+		padding: 0.6rem 0.75rem;
+		border: 1px solid #d1d5db;
+		border-radius: 6px;
+		font: inherit;
+		font-weight: 400;
+		background: #fff;
+	}
+	input:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
+	.count { float: right; font-weight: 400; color: var(--muted); }
+	.count.done { color: #15803d; font-weight: 600; }
+	.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+	.submit { width: 100%; }
+	.msg { margin: 0.75rem 0 0; font-weight: 600; }
+	.msg.ok { color: #15803d; }
+	.msg.err { color: #b91c1c; }
+	.msg[hidden] { display: none; }
+</style>

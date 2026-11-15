@@ -2,8 +2,8 @@
 // Each entry is a section on /holiday, shown in this order. The slug must match the
 // category's slug in the admin (Categories); the title is what customers see.
 export const HOLIDAY_SECTIONS = [
-	{ slug: "passover", title: "Passover" },
 	{ slug: "holiday", title: "Holiday Bundle" },
+	{ slug: "passover", title: "Passover" },
 	{ slug: "seasonal", title: "Summer Refresh" },
 ];
 
