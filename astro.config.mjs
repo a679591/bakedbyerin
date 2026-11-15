@@ -13,7 +13,7 @@ export default defineConfig({
 	redirects: {
 		"/index.html": "/",
 		"/menu.html": "/products",
-		"/seasonal_menu.html": "/products?category=seasonal",
+		"/seasonal_menu.html": "/holiday#seasonal",
 		"/passover_menu.html": "/holiday",
 		"/holiday_menu.html": "/holiday",
 		"/contact.html": "/contact",

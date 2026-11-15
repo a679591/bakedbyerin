@@ -262,11 +262,11 @@
 				},
 				{
 					"slug": "seasonal",
-					"label": "Seasonal"
+					"label": "Summer Refresh"
 				},
 				{
 					"slug": "holiday",
-					"label": "Holiday"
+					"label": "Holiday Bundle"
 				},
 				{
 					"slug": "passover",
@@ -289,11 +289,6 @@
 					"type": "custom",
 					"label": "Menu",
 					"url": "/products"
-				},
-				{
-					"type": "custom",
-					"label": "Seasonal",
-					"url": "/products?category=seasonal"
 				},
 				{
 					"type": "custom",
@@ -660,9 +655,9 @@
 				"slug": "holiday-mini-banana-espresso-5-pack",
 				"status": "published",
 				"data": {
-					"title": "Holiday 5-Pack: Mini Banana Espresso Breads",
-					"summary": "Five tiny banana espresso breads — perfect for gifting or sharing over the holidays",
-					"highlights": "5 mini loaves\nGreat for gifts & parties\nAdd chocolate chips for free",
+					"title": "Tiny Banana Espresso Bread Bundle (5)",
+					"summary": "Five tiny banana espresso breads, perfect for gifting or sharing",
+					"highlights": "5 tiny loaves\nGreat for gifts & parties\nAdd chocolate chips for free",
 					"price": 25,
 					"unit": "box",
 					"available": true,

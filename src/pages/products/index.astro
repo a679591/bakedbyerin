@@ -2,6 +2,7 @@
 import { getEmDashCollection, getTaxonomyTermsWithCacheHint } from "emdash";
 import Base from "../../layouts/Base.astro";
 import ProductCard from "../../components/ProductCard.astro";
+import { isHolidayCategory, isHolidayProduct } from "../../lib/menu-sections";
 
 const { data: terms, cacheHint: termCache } = await getTaxonomyTermsWithCacheHint("category");
 const { entries: products, cacheHint } = await getEmDashCollection("products", {
@@ -17,30 +18,29 @@ const activeCategory = Astro.url.searchParams.get("category");
 const activeTerm = terms.find((t) => t.slug === activeCategory);
 
 const sorted = [...products].sort((a, b) => (a.data.sort_order ?? 999) - (b.data.sort_order ?? 999));
-// "All" shows what can be ordered now; a category page also shows out-of-season items.
+// "All" shows the regular menu that can be ordered now. Holiday, Passover and Summer Refresh
+// items live on the Holiday page (src/lib/menu-sections.ts). A category link still shows that category.
 const visible = activeCategory
 	? sorted.filter((p) => (p.data.terms?.category ?? []).some((t) => t.slug === activeCategory))
-	: sorted.filter((p) => p.data.available !== false);
+	: sorted.filter((p) => p.data.available !== false && !isHolidayProduct(p));
+const menuTerms = terms.filter((t) => !isHolidayCategory(t.slug));
 
-// Group by category, keeping the category order from the admin.
-const order = terms.map((t) => t.slug);
+// Group by category. Groups follow the products' "Menu order" numbers (lowest first),
+// so the admin's Menu order controls both the items and the sections.
+const minOrder = (items: typeof products) => Math.min(...items.map((p) => p.data.sort_order ?? 999));
 const groups = new Map<string, typeof products>();
 for (const p of visible) {
 	const key = p.data.terms?.category?.[0]?.slug ?? "other";
 	if (!groups.has(key)) groups.set(key, []);
 	groups.get(key)!.push(p);
 }
-const grouped = [...groups.entries()].sort((a, b) => {
-	const ia = order.indexOf(a[0]);
-	const ib = order.indexOf(b[0]);
-	return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
-});
+const grouped = [...groups.entries()].sort((a, b) => minOrder(a[1]) - minOrder(b[1]));
 const labelFor = (slug: string) => terms.find((t) => t.slug === slug)?.label ?? "More";
 
 const heading =
-	activeCategory === "seasonal" ? "Our Special Menu" :
+	activeCategory === "seasonal" ? "Summer Refresh" :
 	activeCategory === "passover" ? "Passover Menu" :
-	activeCategory === "holiday" ? "Holiday Specials" :
+	activeCategory === "holiday" ? "Holiday Bundle" :
 	activeTerm ? activeTerm.label : "Our Menu";
 ---
 
@@ -50,7 +50,7 @@ const heading =
 
 		<nav class="filters" aria-label="Menu sections">
 			<a href="/products" class={!activeCategory ? "active" : ""}>All</a>
-			{terms.map((t) => (
+			{menuTerms.map((t) => (
 				<a href={`/products?category=${t.slug}`} class={activeCategory === t.slug ? "active" : ""}>{t.label}</a>
 			))}
 		</nav>

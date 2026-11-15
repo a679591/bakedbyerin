@@ -2,14 +2,10 @@
 import { getEmDashCollection } from "emdash";
 import Base from "../layouts/Base.astro";
 import ProductCard from "../components/ProductCard.astro";
+import { HOLIDAY_SECTIONS } from "../lib/menu-sections";
 
-// The Holiday page groups several product categories into sections, in this order.
-// To add another holiday later (e.g. "Christmas"), create the category in the admin
-// and add a line here.
-const SECTIONS = [
-	{ slug: "holiday", title: "Holiday Specials" },
-	{ slug: "passover", title: "Passover" },
-];
+// Sections and their order come from src/lib/menu-sections.ts.
+const SECTIONS = HOLIDAY_SECTIONS;
 
 const { entries: products, cacheHint } = await getEmDashCollection("products", {
 	status: "published",
@@ -23,7 +19,7 @@ const inCategory = (slug: string) =>
 const sections = SECTIONS.map((s) => ({ ...s, items: inCategory(s.slug) })).filter((s) => s.items.length > 0);
 ---
 
-<Base title="Holiday Menu" description="Holiday specials, bundles and Passover treats from Baked by Erin." textured>
+<Base title="Holiday Menu" description="Passover treats, holiday bundles and summer refreshers from Baked by Erin." textured>
 	<section class="holiday">
 		<h1 class="section-heading">Holiday Menu</h1>
 
@@ -34,7 +30,7 @@ const sections = SECTIONS.map((s) => ({ ...s, items: inCategory(s.slug) })).filt
 		)}
 
 		{sections.length === 0 ? (
-			<p class="empty">Holiday treats are coming soon — check back!</p>
+			<p class="empty">Holiday treats are coming soon, check back!</p>
 		) : (
 			sections.map((s) => (
 				<section class="group" id={s.slug}>

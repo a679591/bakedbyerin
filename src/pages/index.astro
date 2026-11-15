@@ -2,6 +2,7 @@
 import { getEmDashCollection } from "emdash";
 import Base from "../layouts/Base.astro";
 import ProductCard from "../components/ProductCard.astro";
+import { isHolidayProduct } from "../lib/menu-sections";
 
 const { entries: products, cacheHint } = await getEmDashCollection("products", {
 	status: "published",
@@ -10,7 +11,8 @@ const { entries: products, cacheHint } = await getEmDashCollection("products", {
 });
 if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
 
-const featured = [...products]
+const featured = products
+	.filter((p) => !isHolidayProduct(p))
 	.sort((a, b) => (a.data.sort_order ?? 999) - (b.data.sort_order ?? 999))
 	.slice(0, 3);
 ---
