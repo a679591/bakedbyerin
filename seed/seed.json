@@ -112,6 +112,16 @@
 			"supports": [],
 			"fields": [
 				{
+					"slug": "title",
+					"label": "Order",
+					"type": "string"
+				},
+				{
+					"slug": "item_count",
+					"label": "Items",
+					"type": "integer"
+				},
+				{
 					"slug": "customer_name",
 					"label": "Customer Name",
 					"type": "string",
@@ -250,7 +260,15 @@
 					"label": "Confirmation email sent",
 					"type": "datetime"
 				}
-			]
+			],
+			"titleField": "title",
+			"dateField": "pickup_date",
+			"admin": {
+				"listColumns": [
+					"item_count",
+					"order_status"
+				]
+			}
 		},
 		{
 			"slug": "reviews",

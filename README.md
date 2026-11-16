@@ -135,6 +135,12 @@ The Worker cron (`src/worker.ts`) runs the confirmation and review jobs through
 `/api/tasks/review-emails`. Check `npx wrangler tail` for "… email sent / failed".
 Payment (PayPal, Venmo, CashApp, Zelle, cash or check) happens after Erin confirms.
 
+Admin Orders list: each order is saved with a `title` ("Order – Jane Doe – Fri, Nov 20")
+and `item_count`; older orders are filled in by the 5-minute job. The list's name,
+date and extra columns come from `scripts/orders-admin-view.sql` (run once with
+`npx wrangler d1 execute baked-by-erin --remote --file scripts/orders-admin-view.sql`).
+Admin dates follow the site time zone in Settings (America/New_York).
+
 ## Editing the menu
 
 In the admin, each product has: price (small size, or the only price), an

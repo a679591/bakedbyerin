@@ -3,7 +3,7 @@ import { env } from "cloudflare:workers";
 import { getEmDashCollection } from "emdash";
 import { withEmDashRuntime } from "emdash/middleware";
 import { buildEmail, isDue, taskKey } from "../../../lib/review-emails";
-import { confirmationDue, confirmationEmail } from "../../../lib/order-emails";
+import { confirmationDue, confirmationEmail, itemCount, orderTitle } from "../../../lib/order-emails";
 
 /**
  * POST /api/tasks/review-emails?jobs=confirm,review — called by the Worker's scheduled job
@@ -32,6 +32,19 @@ export const POST: APIRoute = async ({ request }) => {
 	const { entries: orders } = await getEmDashCollection("orders", { status: "published", limit: 500 });
 
 	const report = await withEmDashRuntime(async (runtime) => {
+		// Housekeeping: give older orders a readable name and item count for the admin list.
+		if (jobs.includes("confirm" as any)) {
+			for (const order of orders.filter((o) => !(o.data as any).title || (o.data as any).item_count == null)) {
+				const id = String((order.data as any).id ?? order.id);
+				const r = await runtime.handleContentUpdate("orders", id, {
+					data: { title: orderTitle(order.data), item_count: itemCount(order.data) },
+				});
+				if ((r as any)?.success === false) {
+					console.error(`Order names paused: could not update ${id} (are the title and item_count fields added to Orders?)`);
+					break;
+				}
+			}
+		}
 		const email = (runtime as any).email;
 		if (!email?.isAvailable?.()) return { skipped: "email provider not set up (Settings → Email)" };
 		const out: Record<string, unknown> = {};

@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import { getEmDashCollection } from "emdash";
 import { withEmDashRuntime } from "emdash/middleware";
-import { newOrderEmail } from "../../lib/order-emails";
+import { itemCount, newOrderEmail, orderTitle } from "../../lib/order-emails";
 import { checkMinimums, parseMixins, type CartLine } from "../../lib/menu-rules";
 
 /**
@@ -112,25 +112,33 @@ export const POST: APIRoute = async ({ request }) => {
 
 	try {
 		const id = await withEmDashRuntime(async (runtime) => {
-			const created = await runtime.handleContentCreate("orders", {
-				data: {
-					customer_name,
-					customer_email: customer_email || undefined,
-					customer_phone: customer_phone || undefined,
-					pickup_date,
-					fulfillment,
-					delivery_address: delivery_address || undefined,
-					items,
-					delivery_fee,
-					total,
-					notes: notes || undefined,
-					payment_method: "pay-after-confirmation",
-					order_status: "new",
-				},
-				// Published content needs a slug; orders aren't public pages, so any unique value works.
-				slug: `order-${Date.now().toString(36)}-${crypto.randomUUID().slice(0, 8)}`,
-				status: "published",
-			});
+			const data: Record<string, unknown> = {
+				// Shown as the order's name in the admin list, plus an item count column.
+				title: orderTitle({ customer_name, requested_date }),
+				item_count: itemCount({ items }),
+				customer_name,
+				customer_email: customer_email || undefined,
+				customer_phone: customer_phone || undefined,
+				pickup_date,
+				fulfillment,
+				delivery_address: delivery_address || undefined,
+				items,
+				delivery_fee,
+				total,
+				notes: notes || undefined,
+				payment_method: "pay-after-confirmation",
+				order_status: "new",
+			};
+			// Published content needs a slug; orders aren't public pages, so any unique value works.
+			const slug = `order-${Date.now().toString(36)}-${crypto.randomUUID().slice(0, 8)}`;
+			let created = await runtime.handleContentCreate("orders", { data, slug, status: "published" });
+			if ((created as any).error) {
+				// If the admin-list fields (title, item_count) haven't been added to Orders yet,
+				// save the order without them rather than failing the customer's checkout.
+				console.error(`Order save with title/item_count failed, retrying without: ${JSON.stringify((created as any).error)}`);
+				const { title: _t, item_count: _c, ...rest } = data;
+				created = await runtime.handleContentCreate("orders", { data: rest, slug, status: "published" });
+			}
 			if ((created as any).error) throw new Error(`create failed: ${JSON.stringify((created as any).error)}`);
 			const createdId = (created as any).data?.item?.id;
 			if (!createdId) throw new Error("create returned no id");

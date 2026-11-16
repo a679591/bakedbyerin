@@ -54,6 +54,19 @@ function htmlWrap(inner: string): string {
 	return `<div style="font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.6;color:#2d2d2d;max-width:560px">${inner}</div>`;
 }
 
+/** Name shown for the order in the admin list: "Order – Jane Doe – Fri, Nov 20". */
+export function orderTitle(order: Record<string, any>): string {
+	const raw = order.requested_date || order.pickup_date;
+	const d = new Date(/^\d{4}-\d{2}-\d{2}$/.test(String(raw)) ? `${raw}T12:00:00Z` : String(raw));
+	const due = Number.isNaN(d.getTime()) ? "" : d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" });
+	return ["Order", String(order.customer_name ?? "").trim() || "Customer", due].filter(Boolean).join(" – ");
+}
+
+/** Total number of items (sum of quantities) for the admin "Items" column. */
+export function itemCount(order: Record<string, any>): number {
+	return ((order.items as Item[]) ?? []).reduce((n, i) => n + (Number(i?.quantity) || 0), 0);
+}
+
 /** 1. New order notification for Erin. Replying goes to the customer. */
 export function newOrderEmail(order: Record<string, any>, id: string, siteUrl: string) {
 	const site = siteUrl.replace(/\/$/, "");
