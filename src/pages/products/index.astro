@@ -15,6 +15,10 @@ if (Astro.cache?.enabled) {
 }
 
 const activeCategory = Astro.url.searchParams.get("category");
+// Holiday, Passover and Summer Refresh items live on the Holiday page: send those links there.
+if (activeCategory && isHolidayCategory(activeCategory)) {
+	return Astro.redirect(activeCategory === "holiday" ? "/holiday" : `/holiday?section=${activeCategory}`, 302);
+}
 const activeTerm = terms.find((t) => t.slug === activeCategory);
 
 const sorted = [...products].sort((a, b) => (a.data.sort_order ?? 999) - (b.data.sort_order ?? 999));

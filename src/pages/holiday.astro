@@ -2,7 +2,7 @@
 import { getEmDashCollection } from "emdash";
 import Base from "../layouts/Base.astro";
 import ProductCard from "../components/ProductCard.astro";
-import { HOLIDAY_SECTIONS } from "../lib/menu-sections";
+import { HOLIDAY_SECTIONS, holidaySectionOf } from "../lib/menu-sections";
 
 // Sections and their order come from src/lib/menu-sections.ts.
 const SECTIONS = HOLIDAY_SECTIONS;
@@ -14,8 +14,8 @@ const { entries: products, cacheHint } = await getEmDashCollection("products", {
 if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
 
 const sorted = [...products].sort((a, b) => (a.data.sort_order ?? 999) - (b.data.sort_order ?? 999));
-const inCategory = (slug: string) =>
-	sorted.filter((p) => (p.data.terms?.category ?? []).some((t) => t.slug === slug));
+// Each item goes in exactly one section (Passover / Summer Refresh before the general Holiday tag).
+const inCategory = (slug: string) => sorted.filter((p) => holidaySectionOf(p) === slug);
 const allSections = SECTIONS.map((s) => ({ ...s, items: inCategory(s.slug) })).filter((s) => s.items.length > 0);
 // Tabs: "All" shows every section; ?section=<slug> shows just one.
 const active = Astro.url.searchParams.get("section");
