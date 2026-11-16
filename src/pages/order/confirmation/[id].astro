@@ -28,7 +28,7 @@ const extras = (it: Item) => [it.size, it.mixin].filter(Boolean).join(", ");
 			<h1>Thank you!</h1>
 			{order ? (
 				<>
-					<p class="lead">Your order is in. Erin will reach out to confirm it and let you know how to pay.</p>
+					<p class="lead">Your order is in! You'll get a confirmation email as soon as Erin confirms it.</p>
 					<table class="summary">
 						<tbody>
 							<tr><th>Name</th><td>{order.data.customer_name}</td></tr>

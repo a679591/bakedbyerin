@@ -239,6 +239,16 @@
 					"slug": "review_email_sent",
 					"label": "Review email sent",
 					"type": "datetime"
+				},
+				{
+					"slug": "confirmation_note",
+					"label": "Note to customer (included in the confirmation email)",
+					"type": "text"
+				},
+				{
+					"slug": "confirmation_email_sent",
+					"label": "Confirmation email sent",
+					"type": "datetime"
 				}
 			]
 		},

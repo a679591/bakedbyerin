@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { getEmDashCollection } from "emdash";
 import { withEmDashRuntime } from "emdash/middleware";
+import { newOrderEmail } from "../../lib/order-emails";
 import { checkMinimums, parseMixins, type CartLine } from "../../lib/menu-rules";
 
 /**
@@ -15,59 +16,6 @@ import { checkMinimums, parseMixins, type CartLine } from "../../lib/menu-rules"
 const DELIVERY_FEE = 10;
 // Orders need this many days' notice (order on Nov 1 → earliest Nov 4). Keep in sync with order/index.astro.
 const LEAD_DAYS = 3;
-// Erin's Formspree form: each order is emailed to her from here (the server), right after it's saved.
-const FORMSPREE_URL = "https://formspree.io/f/xyknvwqq";
-
-type OrderItem = { product: string; size?: string; mixin?: string; quantity: number; unit_price: number };
-
-/** Sends the order to Formspree. Returns true when Formspree accepted it. Never throws. */
-async function notifyErin(order: Record<string, any>, id: string, origin: string | null): Promise<boolean> {
-	const items = (order.items as OrderItem[])
-		.map((i) => {
-			const extras = [i.size, i.mixin].filter(Boolean).join(", ");
-			return `${i.quantity} × ${i.product}${extras ? ` (${extras})` : ""} — $${i.unit_price * i.quantity}`;
-		})
-		.join("\n");
-	const site = origin && /^https:\/\/([a-z0-9-]+\.)*bakedbyerin\.com$/.test(origin) ? origin : "https://bakedbyerin.com";
-	try {
-		const res = await fetch(FORMSPREE_URL, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				Accept: "application/json",
-				// Formspree's "restrict to domain" setting checks where the submission came from.
-				Origin: site,
-				Referer: `${site}/order`,
-			},
-			body: JSON.stringify({
-				_subject: `New order from ${order.customer_name} (${id.slice(-6)})`,
-				"Order Ref": id,
-				Name: order.customer_name,
-				Phone: order.customer_phone,
-				// Erin's Formspree form requires a field named exactly "email" (also used as the reply-to).
-				email: order.customer_email,
-				"Pickup or Delivery": order.fulfillment,
-				"Delivery Address": order.delivery_address || "",
-				"Requested Date": order.requested_date,
-				Items: items,
-				"Delivery Fee": `$${order.delivery_fee}`,
-				Total: `$${order.total}`,
-				Notes: order.notes || "",
-			}),
-			signal: AbortSignal.timeout(8000),
-		});
-		if (!res.ok) {
-			console.error(`Formspree rejected order ${id}: HTTP ${res.status} ${(await res.text()).slice(0, 500)}`);
-			return false;
-		}
-		console.log(`Formspree accepted order ${id}`);
-		return true;
-	} catch (err) {
-		console.error(`Formspree request failed for order ${id}: ${(err as Error).message}`);
-		return false;
-	}
-}
-
 export const POST: APIRoute = async ({ request }) => {
 	if (request.method !== "POST") {
 		return new Response(JSON.stringify({ ok: false, error: "Method not allowed" }), {
@@ -188,12 +136,23 @@ export const POST: APIRoute = async ({ request }) => {
 			if (!createdId) throw new Error("create returned no id");
 			// Publish so the order shows immediately in the admin.
 			await runtime.handleContentPublish("orders", createdId);
+
+			// Email Erin about the new order (Settings → Email). The order is saved either way.
+			const order = { customer_name, customer_phone, customer_email, fulfillment, delivery_address, requested_date, pickup_date, items, delivery_fee, total, notes };
+			try {
+				const email = (runtime as any).email;
+				if (email?.isAvailable?.()) {
+					await email.send(newOrderEmail(order, String(createdId), new URL(request.url).origin), "system");
+					console.log(`New-order email sent to Erin for order ${createdId}`);
+				} else {
+					console.error(`New-order email NOT sent for ${createdId}: no email provider set up (Settings → Email)`);
+				}
+			} catch (err) {
+				console.error(`New-order email failed for ${createdId}: ${(err as Error).message}`);
+			}
 			return createdId;
 		});
-		const order = { customer_name, customer_phone, customer_email, fulfillment, delivery_address, requested_date, items, delivery_fee, total, notes };
-		const notified = await notifyErin(order, String(id), request.headers.get("origin"));
-		// If the server couldn't reach Formspree, the browser tries once as a fallback.
-		return json({ ok: true, id, notified, order }, 201);
+		return json({ ok: true, id }, 201);
 	} catch (err) {
 		return json({ ok: false, error: `Could not save your order: ${(err as Error).message}` }, 500);
 	}

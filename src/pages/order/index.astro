@@ -26,8 +26,6 @@ const minGroups = MIN_GROUPS.map((g) => ({ key: g.key, min: g.min, label: g.labe
 const DELIVERY_FEE = 10;
 // Orders need this many days' notice (order on Nov 1 → earliest Nov 4). Keep in sync with api/orders.ts.
 const LEAD_DAYS = 3;
-// Erin's Formspree form. The server emails each order; the browser only retries if the server couldn't.
-const FORMSPREE_URL = "https://formspree.io/f/xyknvwqq";
 ---
 
 <Base title="Cart" description="Review your order and check out." textured>
@@ -93,7 +91,7 @@ const FORMSPREE_URL = "https://formspree.io/f/xyknvwqq";
 <script type="application/json" id="catalog-data" set:html={JSON.stringify(catalog)}></script>
 <script type="application/json" id="min-groups" set:html={JSON.stringify(minGroups)}></script>
 
-<script is:inline define:vars={{ DELIVERY_FEE, FORMSPREE_URL, LEAD_DAYS }}>
+<script is:inline define:vars={{ DELIVERY_FEE, LEAD_DAYS }}>
 	(function () {
 		var catalog = JSON.parse(document.getElementById("catalog-data").textContent || "[]");
 		var bySlug = {};
@@ -276,32 +274,6 @@ const FORMSPREE_URL = "https://formspree.io/f/xyknvwqq";
 				});
 				var data = await res.json().catch(function () { return {}; });
 				if (!res.ok || !data.ok) throw new Error(data.error || "Could not place the order. Please try again.");
-
-				// The server already emailed Erin. Only if that failed, try once from the browser.
-				if (!data.notified) try {
-					var o = data.order;
-					var ctrl = new AbortController();
-					setTimeout(function () { ctrl.abort(); }, 5000);
-					await fetch(FORMSPREE_URL, {
-						method: "POST",
-						headers: { "Content-Type": "application/json", Accept: "application/json" },
-						signal: ctrl.signal,
-						body: JSON.stringify({
-							_subject: "New order from " + o.customer_name,
-							"Order Ref": data.id,
-							Name: o.customer_name,
-							Phone: o.customer_phone,
-							email: o.customer_email,
-							"Pickup or Delivery": o.fulfillment,
-							"Delivery Address": o.delivery_address || "",
-							"Requested Date": o.requested_date,
-							Items: o.items.map(function (i) { return i.quantity + " × " + i.product + (i.size ? " (" + i.size + (i.mixin ? ", " + i.mixin : "") + ")" : (i.mixin ? " (" + i.mixin + ")" : "")) + " — $" + (i.unit_price * i.quantity); }).join("\n"),
-							"Delivery Fee": "$" + o.delivery_fee,
-							Total: "$" + o.total,
-							Notes: o.notes || "",
-						}),
-					});
-				} catch (mailErr) { /* order is saved in the admin either way */ }
 
 				window.bbeCart.write([]);
 				window.location.href = "/order/confirmation/" + data.id;

@@ -120,12 +120,20 @@ First switch-over:
 
 Customers add items to a cart (sizes and mix-ins included), choose pickup or
 Miami delivery (+$10), and check out at `/order`. `POST /api/orders` recalculates
-every price on the server, saves the order in the EmDash `orders` collection,
-and emails it to Erin through her Formspree form (the customer's email is required
-and sent as Formspree's `email` field, so Erin can reply directly). Check
-`npx wrangler tail` for "Formspree accepted/rejected order …" if an email is missing. Payment (PayPal,
-Venmo, CashApp, Zelle, cash or check) happens after Erin confirms. Update
-`order_status` in the admin as orders move along.
+every price on the server and saves the order in the EmDash `orders` collection.
+
+Emails (all through Settings → Email, Gmail SMTP; wording in `src/lib/order-emails.ts`
+and `src/lib/review-emails.ts`):
+- **New order** → getbakedbyerin@gmail.com right away. Reply-to is the customer.
+- **Confirmation** → the customer, within ~5 minutes after Erin sets the order's status
+  to `confirmed` (or paid/ready/completed). Includes the order's **Note to customer**
+  (`confirmation_note`) if Erin filled it in. Marked in `confirmation_email_sent`.
+- **Review request** → the customer, 7 days after the pickup date (not cancelled).
+  Marked in `review_email_sent`.
+
+The Worker cron (`src/worker.ts`) runs the confirmation and review jobs through
+`/api/tasks/review-emails`. Check `npx wrangler tail` for "… email sent / failed".
+Payment (PayPal, Venmo, CashApp, Zelle, cash or check) happens after Erin confirms.
 
 ## Editing the menu
 
@@ -147,14 +155,6 @@ Reviews (`/reviews`): customers submit name, items ordered and a review of at le
 Erin publishes it in the admin to show it on the page. The collection was added after
 the first setup, so on the live site it's created once in the admin under Content
 types (slug `reviews`, fields `reviewer_name`, `items_ordered`, `review`).
-
-Review-request emails: 7 days after an order's pickup/delivery date (any order that
-isn't cancelled, with a customer email, pickup within the last 30 days), the customer
-gets a thank-you email linking to /reviews. The Worker's cron (`src/worker.ts`) calls
-`/api/tasks/review-emails` hourly between 9am and 6pm Miami time; the order is marked in
-`review_email_sent` so nobody gets two. Needs: Settings → Email set up (Gmail SMTP with
-an app password) and the `review_email_sent` (datetime) field on Orders. Wording lives in
-`src/lib/review-emails.ts`. Check `npx wrangler tail` for "Review email sent/failed".
 
 Ingredients and allergens: two product fields, **Ingredients** (`ingredients`, long
 text) and **Allergens** (`allergens`, e.g. "Wheat, Eggs, Milk, Walnuts"). Allergens
