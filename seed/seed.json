@@ -234,6 +234,11 @@
 						],
 						"default": "new"
 					}
+				},
+				{
+					"slug": "review_email_sent",
+					"label": "Review email sent",
+					"type": "datetime"
 				}
 			]
 		},

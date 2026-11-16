@@ -148,6 +148,14 @@ Erin publishes it in the admin to show it on the page. The collection was added 
 the first setup, so on the live site it's created once in the admin under Content
 types (slug `reviews`, fields `reviewer_name`, `items_ordered`, `review`).
 
+Review-request emails: 7 days after an order's pickup/delivery date (any order that
+isn't cancelled, with a customer email, pickup within the last 30 days), the customer
+gets a thank-you email linking to /reviews. The Worker's cron (`src/worker.ts`) calls
+`/api/tasks/review-emails` hourly between 9am and 6pm Miami time; the order is marked in
+`review_email_sent` so nobody gets two. Needs: Settings → Email set up (Gmail SMTP with
+an app password) and the `review_email_sent` (datetime) field on Orders. Wording lives in
+`src/lib/review-emails.ts`. Check `npx wrangler tail` for "Review email sent/failed".
+
 Ingredients and allergens: two product fields, **Ingredients** (`ingredients`, long
 text) and **Allergens** (`allergens`, e.g. "Wheat, Eggs, Milk, Walnuts"). Allergens
 show as a "Contains:" line on every card; ingredients sit in a fold-out on the menu
